@@ -1,0 +1,51 @@
+<nav class="navbar navbar-top navbar-expand navbar-dark background-gray border-bottom" id="navbar-main">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Sidenav toggler -->
+      <div class="pr-3 sidenav-toggler sidenav-toggler-dark position-absolute" data-action="sidenav-pin"
+           data-target="#sidenav-main" (click)="toggleSidenav()">
+        <div class="sidenav-toggler-inner d-xl-none" #topMenu>
+          <i class="sidenav-toggler-line bg-dark"></i>
+          <i class="sidenav-toggler-line bg-dark"></i>
+          <i class="sidenav-toggler-line bg-dark"></i>
+        </div>
+      </div>
+      <!-- Navbar links -->
+      <ul class="navbar-nav align-items-center w-100 justify-content-center ml-3">
+        <!--  Dashboard  -->
+        <li class="mx-2">
+          <button class="btn btn-icon btn-3 btn-danger px-3" type="button">
+            <span class="btn-inner--icon"><i class="ni ni-app"></i></span>
+            <span class="btn-inner--text d-none d-md-inline">Dashboard</span>
+          </button>
+        </li>
+        <!--  Records  -->
+        <li class="mx-2">
+          <button class="btn btn-icon btn-3 btn-danger px-3" type="button" routerLink="/records">
+            <span class="btn-inner--icon"><i class="ni ni-bullet-list-67"></i></span>
+            <span class="btn-inner--text d-none d-md-inline">Records</span>
+          </button>
+        </li>
+        <!--  Statistics  -->
+        <li class="mx-2">
+          <button class="btn btn-icon btn-3 btn-danger px-3" type="button" routerLink="statistics">
+            <span class="btn-inner--icon"><i class="ni ni-chart-bar-32"></i></span>
+            <span class="btn-inner--text d-none d-md-inline">Statistics</span>
+          </button>
+        </li>
+        <!--  Settings  -->
+        <li class="mx-2">
+          <button class="btn btn-icon btn-3 btn-danger px-3" type="button" routerLink="/settings">
+            <span class="btn-inner--icon"><i class="ni ni-settings-gear-65"></i></span>
+            <span class="btn-inner--text d-none d-md-inline">Settings</span>
+          </button>
+        </li>
+      </ul>
+      <!--  Logout  -->
+      <button class="btn btn-icon btn-3 btn-danger ml-auto px-3" type="button">
+        <span class="btn-inner--icon"><i class="ni ni-user-run"></i></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div *ngIf="sidenavOpen === true" class="backdrop d-xl-none" (click)="toggleSidenav()">FFFFFFF</div>

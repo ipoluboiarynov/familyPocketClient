@@ -1,0 +1,49 @@
+<nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white"
+  id="sidenav-main" (mouseover)="onMouseEnterSidenav()" (mouseout)="onMouseLeaveSidenav()">
+  <perfect-scrollbar>
+    <div class="scrollbar-inner">
+      <div class="sidenav-header d-flex align-items-center">
+        <!-- Logo -->
+        <a class="navbar-brand" [routerLink]="['/dashboards/dashboard']">
+          <img src="assets/img/brand/red.png" class="navbar-brand-img" alt="...">
+        </a>
+        <!-- Sidenav toggler -->
+        <div class="ml-auto">
+          <div class="sidenav-toggler d-none d-xl-block" data-action="sidenav-unpin" data-target="#sidenav-main"
+            (click)="minimizeSidebar()">
+            <div class="sidenav-toggler-inner">
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar-inner">
+        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+          <!-- Incomes -->
+          <h6 class="navbar-heading p-0 text-muted">Incomes</h6>
+          <ul class="navbar-nav">
+            <li *ngFor="let category of categories | filterCategoriesByType:false" class="nav-item">
+              <a class="nav-link">
+                <i class="ni {{ category.icon }}"></i>
+                <span class="nav-link-text">{{ category.name }}</span>
+              </a>
+            </li>
+          </ul>
+          <hr class="my-3" />
+          <!-- Expenses -->
+          <h6 class="navbar-heading p-0 text-muted">Expenses</h6>
+          <ul class="navbar-nav">
+            <li *ngFor="let category of categories | filterCategoriesByType:true" class="nav-item">
+              <a class="nav-link">
+                <i class="ni {{ category.icon }}"></i>
+                <span class="nav-link-text">{{ category.name }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </perfect-scrollbar>
+</nav>
