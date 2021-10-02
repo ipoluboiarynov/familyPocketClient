@@ -1,1 +1,520 @@
-<p>settings works!</p>
+<div class="container-fluid">
+  <!--  Accounts  -->
+  <div class="row">
+    <div class="tab-pane tab-example-result w-100 mt-3 fade show active" role="tabpanel" aria-labelledby="card-component-tab">
+      <div class="card card-frame">
+        <div class="card-body">
+          <h4 class="card-title text-uppercase text-center mb-3">Accounts</h4>
+
+
+          <div class=" table-responsive">
+            <table class=" table align-items-center table-flush">
+              <thead class=" thead-light">
+                <tr>
+                  <th class="sort text-center" data-sort="account" scope="col">Account</th>
+                  <th class="sort text-center" data-sort="amount" scope="col">Start amount</th>
+                  <th class="sort text-center" data-sort="date" scope="col">Start Date</th>
+                  <th class="sort text-center" data-sort="limit" scope="col">Limit</th>
+                  <th class="sort text-center" data-sort="currency" scope="col">Currency</th>
+                  <th scope="col"></th>
+              </tr>
+              </thead>
+              <tbody class=" list">
+              <tr>
+                <th scope="row">
+                  <div class=" media align-items-center">
+                    <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                      <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                    </a>
+                    <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        WellsFargo
+                      </span>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="budget text-center">2500</td>
+                <td class="budget text-center">8/9/2021</td>
+                <td class="budget text-center">6000</td>
+                <td class="budget text-center">USD</td>
+                <td class="text-right">
+                  <div dropdown class="dropdown no-caret" [dropup]="true">
+                    <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                      aria-controls="dropdown-dropup">
+                      <i class=" fas fa-ellipsis-v"> </i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                      <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                      <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">
+                  <div class=" media align-items-center">
+                    <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                      <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                    </a>
+                    <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        WellsFargo
+                      </span>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="budget text-center">2500</td>
+                <td class="budget text-center">8/9/2021</td>
+                <td class="budget text-center">6000</td>
+                <td class="budget text-center">USD</td>
+                <td class="text-right">
+                  <div dropdown class="dropdown no-caret" [dropup]="true">
+                    <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                       aria-controls="dropdown-dropup">
+                      <i class=" fas fa-ellipsis-v"> </i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                      <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                      <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">
+                  <div class=" media align-items-center">
+                    <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                      <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                    </a>
+                    <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        WellsFargo
+                      </span>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="budget text-center">2500</td>
+                <td class="budget text-center">8/9/2021</td>
+                <td class="budget text-center">6000</td>
+                <td class="budget text-center">USD</td>
+                <td class="text-right">
+                  <div dropdown class="dropdown no-caret" [dropup]="true">
+                    <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                       aria-controls="dropdown-dropup">
+                      <i class=" fas fa-ellipsis-v"> </i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                      <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                      <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Categories -->
+  <div class="row">
+    <!--  Expenses  -->
+    <div class="col-12 col-sm-6">
+      <div class="tab-pane tab-example-result w-100 mt-3 fade show active" role="tabpanel" aria-labelledby="card-component-tab">
+        <div class="card card-frame">
+          <div class="card-body">
+            <h4 class="card-title text-uppercase text-center mb-3">Expenses</h4>
+
+
+            <div class=" table-responsive">
+              <table class=" table align-items-center table-flush">
+                <thead class=" thead-light">
+                <tr>
+                  <th class="sort text-center" data-sort="account" scope="col">Expense</th>
+                  <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody class=" list">
+                  <tr>
+                  <th scope="row">
+                    <div class=" media align-items-center">
+                      <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                        <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                      </a>
+                      <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        Transport
+                      </span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="text-right">
+                    <div dropdown class="dropdown no-caret" [dropup]="true">
+                      <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                         aria-controls="dropdown-dropup">
+                        <i class=" fas fa-ellipsis-v"> </i>
+                      </a>
+
+                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                        <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                        <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                  <tr>
+                    <th scope="row">
+                      <div class=" media align-items-center">
+                        <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                          <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                        </a>
+                        <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        Transport
+                      </span>
+                        </div>
+                      </div>
+                    </th>
+                    <td class="text-right">
+                      <div dropdown class="dropdown no-caret" [dropup]="true">
+                        <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                           aria-controls="dropdown-dropup">
+                          <i class=" fas fa-ellipsis-v"> </i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                          <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                          <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th scope="row">
+                      <div class=" media align-items-center">
+                        <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                          <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                        </a>
+                        <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        Transport
+                      </span>
+                        </div>
+                      </div>
+                    </th>
+                    <td class="text-right">
+                      <div dropdown class="dropdown no-caret" [dropup]="true">
+                        <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                           aria-controls="dropdown-dropup">
+                          <i class=" fas fa-ellipsis-v"> </i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                          <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                          <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  Incomes  -->
+    <div class="col-6=12 col-sm-6">
+      <div class="tab-pane tab-example-result w-100 mt-3 fade show active" role="tabpanel" aria-labelledby="card-component-tab">
+        <div class="card card-frame">
+          <div class="card-body">
+            <h4 class="card-title text-uppercase text-center mb-3">Incomes</h4>
+
+
+            <div class=" table-responsive">
+              <table class=" table align-items-center table-flush">
+                <thead class=" thead-light">
+                <tr>
+                  <th class="sort text-center" data-sort="account" scope="col">Income</th>
+                  <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody class=" list">
+                <tr>
+                  <th scope="row">
+                    <div class=" media align-items-center">
+                      <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                        <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                      </a>
+                      <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        Transport
+                      </span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="text-right">
+                    <div dropdown class="dropdown no-caret" [dropup]="true">
+                      <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                         aria-controls="dropdown-dropup">
+                        <i class=" fas fa-ellipsis-v"> </i>
+                      </a>
+
+                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                        <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                        <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th scope="row">
+                    <div class=" media align-items-center">
+                      <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                        <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                      </a>
+                      <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        Transport
+                      </span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="text-right">
+                    <div dropdown class="dropdown no-caret" [dropup]="true">
+                      <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                         aria-controls="dropdown-dropup">
+                        <i class=" fas fa-ellipsis-v"> </i>
+                      </a>
+
+                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                        <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                        <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th scope="row">
+                    <div class=" media align-items-center">
+                      <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                        <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                      </a>
+                      <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        Transport
+                      </span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="text-right">
+                    <div dropdown class="dropdown no-caret" [dropup]="true">
+                      <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                         aria-controls="dropdown-dropup">
+                        <i class=" fas fa-ellipsis-v"> </i>
+                      </a>
+
+                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                        <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                        <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  Currencies -->
+  <div class="row">
+    <div class="tab-pane tab-example-result w-100 mt-3 fade show active" role="tabpanel" aria-labelledby="card-component-tab">
+      <div class="card card-frame">
+        <div class="card-body">
+          <h4 class="card-title text-uppercase text-center mb-3">Currencies</h4>
+
+
+          <div class=" table-responsive">
+            <table class=" table align-items-center table-flush">
+              <thead class=" thead-light">
+              <tr>
+                <th class="sort text-center" data-sort="account" scope="col">Currency</th>
+                <th class="sort text-center" data-sort="amount" scope="col">Direction</th>
+                <th class="sort text-center" data-sort="date" scope="col">Current Rating</th>
+                <th scope="col"></th>
+              </tr>
+              </thead>
+              <tbody class=" list">
+              <tr>
+                <th scope="row">
+                  <div class=" media align-items-center">
+                    <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                      <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                    </a>
+                    <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        EUR
+                      </span>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="budget text-center">EUR-USD</td>
+                <td class="budget text-center">1.18</td>
+                <td class="text-right">
+                  <div dropdown class="dropdown no-caret" [dropup]="true">
+                    <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                       aria-controls="dropdown-dropup">
+                      <i class=" fas fa-ellipsis-v"> </i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                      <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                      <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">
+                  <div class=" media align-items-center">
+                    <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                      <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                    </a>
+                    <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        EUR
+                      </span>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="budget text-center">EUR-USD</td>
+                <td class="budget text-center">1.18</td>
+                <td class="text-right">
+                  <div dropdown class="dropdown no-caret" [dropup]="true">
+                    <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                       aria-controls="dropdown-dropup">
+                      <i class=" fas fa-ellipsis-v"> </i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                      <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                      <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <th scope="row">
+                  <div class=" media align-items-center">
+                    <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
+                      <img alt="Image placeholder" src="./assets/img/theme/bootstrap.jpg">
+                    </a>
+                    <div class=" media-body">
+                      <span class=" name mb-0 text-sm">
+                        EUR
+                      </span>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="budget text-center">EUR-USD</td>
+                <td class="budget text-center">1.18</td>
+                <td class="text-right">
+                  <div dropdown class="dropdown no-caret" [dropup]="true">
+                    <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                       aria-controls="dropdown-dropup">
+                      <i class=" fas fa-ellipsis-v"> </i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
+                      <a href="javascript:void(0)" class="dropdown-item">Edit</a>
+                      <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  Profile -->
+  <div class="row">
+    <div class="tab-pane tab-example-result w-100 mt-3 fade show active" role="tabpanel" aria-labelledby="card-component-tab">
+      <div class="card card-frame">
+        <div class="card-body">
+          <h4 class="card-title text-uppercase text-center mb-3">Profile</h4>
+
+            <div class="form-group">
+              <div class="input-group input-group-merge">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">@</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="Name">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-light" type="button" id="button-addon2">Change</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="input-group input-group-merge">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">@</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="Email">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-light" type="button" id="button-addon2">Change</button>
+                </div>
+              </div>
+            </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

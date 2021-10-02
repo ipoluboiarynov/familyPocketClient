@@ -18,6 +18,10 @@ import {ToastrModule} from "ngx-toastr";
 import {CollapseModule} from "ngx-bootstrap/collapse";
 import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from "ngx-perfect-scrollbar";
 import { FilterCategoriesByTypePipe } from './shared/pipes/filter-categories-by-type.pipe';
+import {ReactiveFormsModule} from "@angular/forms";
+import {ChartsModule} from "ng2-charts";
+import {ProgressbarModule} from "ngx-bootstrap/progressbar";
+import {BsDropdownModule} from "ngx-bootstrap/dropdown";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -44,7 +48,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     CollapseModule.forRoot(),
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    ReactiveFormsModule,
+    ChartsModule,
+    ProgressbarModule,
+    BsDropdownModule
   ],
   providers: [
     {

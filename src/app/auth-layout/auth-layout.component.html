@@ -1,16 +1,32 @@
 <div class="container-fluid m-0 full-height">
-  <div class="d-flex flex-column justify-content-center full-height">
+  <div class="d-flex flex-column justify-content-center align-items-center full-height">
     <div id="card-component" class="tab-pane tab-example-result fade show active" role="tabpanel"
-         aria-labelledby="card-component-tab">
+         aria-labelledby="card-component-tab" style="width: 360px">
       <div class="card card-frame">
         <div class="card-body">
-          This is some text within a card body.
+
+          <div class="d-flex flex-column align-items-center justify-content-center ">
+            <img class="m-auto" src="assets/img/brand/logo.png" alt="logo" width="100">
+            <h1 class="brand-name">Family Pocket</h1>
+          </div>
+
+          <div class=" text-center text-muted my-3">
+            <button type="button" class="btn btn-icon" routerLinkActive="background-gray" routerLink="/login">
+              <span class="btn-inner--icon"><i class="ni ni-circle-08"></i></span>
+              <span class="btn-inner--text">Login</span>
+            </button>
+            <button type="button" class="btn btn-icon" routerLinkActive="background-gray" routerLink="/register">
+              <span class="btn-inner--icon"><i class="ni ni-badge"></i></span>
+              <span class="btn-inner--text">Register</span>
+            </button>
+          </div>
+          <router-outlet></router-outlet>
+          <a class="text-light d-block text-center" href="javascript:void(0)">
+            <small>Forgot password?</small>
+          </a>
         </div>
       </div>
     </div>
+
   </div>
 </div>
-<a routerLink="/login">login</a>
-<a routerLink="/register">Register</a>
-<a routerLink="/dashboard">Dash</a>
-<router-outlet></router-outlet>

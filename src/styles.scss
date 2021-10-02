@@ -1,9 +1,81 @@
 $gray: #E7E7E7;
+$green: #31BE00;
+$red: #DD4B39;
+$text_light: #8F96A9;
 
 .background-gray {
-  background-color: $gray;
+  background-color: $gray!important;
+}
+
+.background-green {
+  background-color: $green!important;
+}
+
+.background-red {
+  background-color: $red!important;
+}
+
+.color-green {
+  color: $green;
+}
+
+.color-red {
+  color: $red;
+}
+
+.color-text_light {
+  color: $text_light;
 }
 
 .full-height {
   min-height: 100vh;
+}
+
+.fs-12 {
+  font-size: .75em;
+}
+
+.fs-24 {
+  font-size: 1.5em;
+}
+
+.fs-32 {
+  font-size: 2em;
+}
+
+.fs-38 {
+  font-size: 2.4em;
+}
+
+.fs-68 {
+  font-size: 4.25em;
+}
+
+.h-150 {
+  height: 150px!important;
+}
+
+.h-20 {
+  height: 20px!important;
+}
+
+.fp-icon {
+  width: 24px;
+  height: 24px;
+  background-color: #5a1140;
+  margin-right: 1em;
+  border-radius: 7px;
+}
+
+.records-th {
+  padding-top: .25em!important;
+  padding-bottom: .25em!important;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  font-family: 'Balsamiq Sans', cursive;
+  color: #8379ff;
 }
