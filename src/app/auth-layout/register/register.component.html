@@ -1,4 +1,4 @@
-<form novalidate="" role="form" class="ng-untouched ng-pristine ng-valid">
+<form [formGroup]="form" (ngSubmit)="register()" novalidate="" role="form" class="ng-untouched ng-pristine ng-valid">
   <div class="form-group mb-3">
     <div class="input-group input-group-alternative">
       <div class="input-group-prepend">
@@ -6,7 +6,7 @@
           <i class="ni ni-email-83"></i>
         </span>
       </div>
-      <input class="form-control" placeholder="Email" type="email">
+      <input formControlName="email" class="form-control" placeholder="Email" type="email">
     </div>
   </div>
   <div class="form-group mb-3">
@@ -16,7 +16,7 @@
           <i class="ni ni-lock-circle-open"></i>
         </span>
       </div>
-      <input class="form-control" placeholder="Password" type="password">
+      <input formControlName="password" class="form-control" placeholder="Password" type="password">
     </div>
   </div>
 
@@ -27,12 +27,12 @@
           <i class="ni ni-lock-circle-open"></i>
         </span>
       </div>
-      <input class="form-control" placeholder="Repeat Password" type="password">
+      <input formControlName="repeat_password" class="form-control" placeholder="Repeat Password" type="password">
     </div>
   </div>
 
   <div class="text-center">
-    <button type="button" class="btn btn-slack btn-icon my-2" disabled>
+    <button type="submit" class="btn btn-slack btn-icon my-2" [disabled]="form.invalid">
       <span class="btn-inner--icon"><i class="ni ni-check-bold"></i></span>
       <span class="btn-inner--text">Submit</span>
     </button>

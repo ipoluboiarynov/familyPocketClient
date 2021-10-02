@@ -22,6 +22,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {ChartsModule} from "ng2-charts";
 import {ProgressbarModule} from "ngx-bootstrap/progressbar";
 import {BsDropdownModule} from "ngx-bootstrap/dropdown";
+import {HttpClientModule} from "@angular/common/http";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -52,7 +53,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ReactiveFormsModule,
     ChartsModule,
     ProgressbarModule,
-    BsDropdownModule
+    BsDropdownModule,
+    HttpClientModule
   ],
   providers: [
     {

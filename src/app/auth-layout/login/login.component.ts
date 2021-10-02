@@ -14,12 +14,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   form!: FormGroup
   aSub!: Subscription;
 
-  constructor(
-              private auth: AuthService,
+  constructor(private auth: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private toast: ToastrService
-  ) { }
+              private toast: ToastrService) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -57,17 +55,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    console.log(this.form.get('email')?.value);
-    console.log(this.form.get('password')?.value);
-    console.log(this.form.get('remember')?.value);
     if (this.form.valid) {
       let user: User = {
         email: this.form.get('email')?.value,
         password: this.form.get('password')?.value
       };
-      this.auth.login(user).subscribe(callback => {
-        console.log(callback);
-      });
+      this.auth.login(user).subscribe(
+        callback => {
+          this.toast.success("You have been successfully authorized");
+       },
+        error => {
+          this.toast.error(error.error.exception);
+        });
     }
   }
 }
