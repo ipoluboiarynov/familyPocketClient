@@ -8,6 +8,7 @@ import {DashboardComponent} from "./admin-layout/dashboard/dashboard.component";
 import {RecordsComponent} from "./admin-layout/records/records.component";
 import {StatisticsComponent} from "./admin-layout/statistics/statistics.component";
 import {SettingsComponent} from "./admin-layout/settings/settings.component";
+import {AuthGuard} from "./shared/guards/auth.guard";
 
 const routes: Routes = [
   {path: '', component: AuthLayoutComponent, children: [
@@ -15,7 +16,8 @@ const routes: Routes = [
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent}
     ]},
-  {path: '', component: AdminLayoutComponent, children: [
+  {path: '', component: AdminLayoutComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard],
+    children: [
       {path: 'dashboard', component: DashboardComponent},
       {path: 'records', component: RecordsComponent},
       {path: 'statistics', component: StatisticsComponent},

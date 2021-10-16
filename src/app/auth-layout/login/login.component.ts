@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../shared/services/auth.service";
 import {User} from "../../shared/models/User";
@@ -26,15 +26,15 @@ export class LoginComponent implements OnInit, OnDestroy {
       remember: new FormControl(false)
     })
 
-    // this.route.queryParams.subscribe((params: Params) => {
-    //   if (params['registered']) {
-    //     this.toast.success('Now you can login to your account');
-    //   } else if (params['accessDenied']) {
-    //     this.toast.error('Access denied. Login first!');
-    //   } else if (params['sessionFailed']) {
-    //     this.toast.warning('Session is over. Login again.');
-    //   }
-    // })
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params['registered']) {
+        this.toast.success('You have been successfully registered.');
+      } else if (params['accessDenied']) {
+        this.toast.error('Access denied. Login first!');
+      } else if (params['sessionFailed']) {
+        this.toast.warning('Session is over. Login again.');
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -43,29 +43,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmit() {
-    // this.form.disable()
-    // this.aSub = this.auth.login(this.form.value).subscribe(
-    //   () => this.router.navigate(['/dashboard']),
-    //   error => {
-    //     this.toast.error(error.error?.message ?? 'Something went wrong! Please try again.');
-    //     this.form.enable();
-    //   }
-    // )
-  }
-
   login() {
     if (this.form.valid) {
       let user: User = {
         email: this.form.get('email')?.value,
         password: this.form.get('password')?.value
       };
-      this.auth.login(user).subscribe(
-        callback => {
-          this.toast.success("You have been successfully authorized");
+      this.form.disable();
+      this.aSub = this.auth.login(user).subscribe(
+        () => {
+          this.router.navigate(['/dashboard']).then();
        },
         error => {
           this.toast.error(error.error.exception);
+          this.form.enable();
         });
     }
   }

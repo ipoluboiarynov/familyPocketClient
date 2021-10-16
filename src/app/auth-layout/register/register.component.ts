@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from "../../shared/services/auth.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {bindCallback, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html'
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   form!: FormGroup
   aSub!: Subscription;
 
   constructor(private auth: AuthService,
               private router: Router,
-              private route: ActivatedRoute,
-              private toast: ToastrService) { }
+              private toast: ToastrService) {
+  }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -26,6 +26,12 @@ export class RegisterComponent implements OnInit {
     })
   }
 
+  ngOnDestroy(): void {
+    if (this.aSub) {
+      this.aSub.unsubscribe()
+    }
+  }
+
   register() {
     if (this.form.valid &&
       this.form.get("password")?.value === this.form.get("repeat_password")?.value) {
@@ -33,19 +39,21 @@ export class RegisterComponent implements OnInit {
         email: this.form.get("email")?.value,
         password: this.form.get("password")?.value
       }
-      this.auth.register(user).subscribe(
-        callback => {
-        this.toast.success('You have been successfully registered.');
-      },
+      this.form.disable();
+      this.aSub = this.auth.register(user).subscribe(
+        () => {
+          this.router.navigate(['/login'], {
+            queryParams: {
+              registered: true
+            }
+          }).then();
+        },
         error => {
           this.toast.error(error.error.exception);
-        },
-        () => {
-          this.form.reset();
+          this.form.enable();
         });
     } else {
       this.toast.warning("Check typed values and try again.");
-      this.form.enable();
     }
   }
 }

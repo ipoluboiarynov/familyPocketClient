@@ -32,7 +32,7 @@
   </div>
 
   <div class="text-center">
-    <button type="submit" class="btn btn-slack btn-icon my-2" [disabled]="form.invalid">
+    <button type="submit" class="btn btn-slack btn-icon my-2" [disabled]="form.invalid || form.disabled">
       <span class="btn-inner--icon"><i class="ni ni-check-bold"></i></span>
       <span class="btn-inner--text">Submit</span>
     </button>
