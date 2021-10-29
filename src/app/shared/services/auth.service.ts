@@ -38,6 +38,7 @@ export class AuthService {
   }
 
   isCookieWithTokenExists(name: string): boolean {
+    // TODO
     let d = new Date();
     d.setTime(d.getTime() + (1000));
     let expires = "expires=" + d.toUTCString();

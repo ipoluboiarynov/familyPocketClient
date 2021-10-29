@@ -3,5 +3,5 @@ export interface Currency {
   name: string,
   icon: string,
   base: boolean,
-  userId: number
+  userId?: number
 }

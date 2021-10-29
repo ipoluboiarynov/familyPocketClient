@@ -10,6 +10,7 @@ export interface Account {
   creditLimit: number,
   startBalance: number,
   accountType: AccountType,
-  userId: number,
-  currency: Currency
+  userId?: number,
+  currency: Currency,
+  balance?: number
 }

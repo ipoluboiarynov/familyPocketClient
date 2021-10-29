@@ -1,7 +1,7 @@
 export interface Category {
-  id?: string;
+  id?: number;
   name: string;
-  icon?: string;
-  isExpense: boolean;
-  userId: string;
+  icon: string;
+  expense: boolean;
+  userId?: number;
 }

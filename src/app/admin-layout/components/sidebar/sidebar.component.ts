@@ -16,15 +16,15 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.categories = [
-      {name: 'Expense 1', icon: 'ni-atom', isExpense: true, userId: '2'},
-      {name: 'Expense 2', icon: 'ni-badge', isExpense: true, userId: '2'},
-      {name: 'Expense 3', icon: 'ni-basket', isExpense: true, userId: '2'},
-      {name: 'Expense 4', icon: 'ni-air-baloon', isExpense: true, userId: '2'},
-      {name: 'Expense 5', icon: 'ni-briefcase-24', isExpense: true, userId: '2'},
-      {name: 'Expense 6', icon: 'ni-box-2', isExpense: true, userId: '2'},
-      {name: 'Income 1', icon: 'ni-cart', isExpense: false, userId: '2'},
-      {name: 'Income 2', icon: 'ni-chart-pie-35', isExpense: false, userId: '2'},
-      {name: 'Income 3', icon: 'ni-compass-04', isExpense: false, userId: '2'}
+      {name: 'Expense 1', icon: 'ni-atom', expense: true, userId: 2},
+      {name: 'Expense 2', icon: 'ni-badge', expense: true, userId: 2},
+      {name: 'Expense 3', icon: 'ni-basket', expense: true, userId: 2},
+      {name: 'Expense 4', icon: 'ni-air-baloon', expense: true, userId: 2},
+      {name: 'Expense 5', icon: 'ni-briefcase-24', expense: true, userId: 2},
+      {name: 'Expense 6', icon: 'ni-box-2', expense: true, userId: 2},
+      {name: 'Income 1', icon: 'ni-cart', expense: false, userId: 2},
+      {name: 'Income 2', icon: 'ni-chart-pie-35', expense: false, userId: 2},
+      {name: 'Income 3', icon: 'ni-compass-04', expense: false, userId: 2}
     ];
   }
 

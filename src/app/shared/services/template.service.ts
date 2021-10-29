@@ -2,11 +2,12 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Currency} from "../models/Currency";
+import {Template} from "../models/Template";
 
 @Injectable({
   providedIn: 'root'
 })
-export class CurrencyService {
+export class TemplateService {
   userId: number = 0;
 
   constructor(private http: HttpClient) {
@@ -17,19 +18,19 @@ export class CurrencyService {
   }
 
   getAll(): Observable<any> {
-    return this.http.post<any>('/api/currency/all', this.userId);
+    return this.http.post<any>('/api/template/all', this.userId);
   }
 
-  add(currency: Currency): Observable<any>{
-    currency.userId = this.userId;
-    return this.http.post<any>('/api/currency/add', currency);
+  add(template: Template): Observable<any>{
+    template.userId = this.userId;
+    return this.http.post<any>('/api/template/add', template);
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<any>('/api/currency/delete/' + id);
+    return this.http.delete<any>('/api/template/delete/' + id);
   }
 
-  update(currency: Currency) {
-    return this.http.patch<any>('/api/currency/update', currency);
+  update(template: Template) {
+    return this.http.patch<any>('/api/template/update', template);
   }
 }
