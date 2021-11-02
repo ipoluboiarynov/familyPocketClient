@@ -46,6 +46,10 @@ $text_light: #8F96A9;
   font-size: .75em;
 }
 
+.fs-18 {
+  font-size: 1.3em;
+}
+
 .fs-24 {
   font-size: 1.5em;
 }
@@ -102,6 +106,13 @@ $text_light: #8F96A9;
   height: 45px;
   font-family: FontAwesome, sans-serif;
   font-weight: 900;
+}
+
+.card-hovered:hover{
+  box-shadow: 2px 2px 5px 0 #532222;
+  transform:scale(1.1);
+  transition: all 1.2s;
+  cursor: pointer;
 }
 
 

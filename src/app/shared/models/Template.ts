@@ -5,7 +5,7 @@ export interface Template {
   id?: number,
   name: string,
   amount?: number,
-  recordType?: number,
+  recordType?: string,
   category?: Category,
   account?: Account,
   userId?: number

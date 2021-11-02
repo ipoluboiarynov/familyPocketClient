@@ -25,6 +25,7 @@ import {BsDropdownModule} from "ngx-bootstrap/dropdown";
 import {HttpClientModule} from "@angular/common/http";
 import {GetRateForCurrencyPipe} from './shared/pipes/get-rate-for-currency.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -46,21 +47,22 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FilterCategoriesByTypePipe,
     GetRateForCurrencyPipe
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        ToastrModule.forRoot(),
-        CollapseModule.forRoot(),
-        PerfectScrollbarModule,
-        ReactiveFormsModule,
-        ChartsModule,
-        ProgressbarModule,
-        BsDropdownModule,
-        HttpClientModule,
-        FormsModule,
-        NgbModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    CollapseModule.forRoot(),
+    PerfectScrollbarModule,
+    ReactiveFormsModule,
+    ChartsModule,
+    ProgressbarModule,
+    BsDropdownModule,
+    HttpClientModule,
+    FormsModule,
+    NgbModule,
+    BsDatepickerModule.forRoot()
+  ],
   providers: [
     {
       provide: PERFECT_SCROLLBAR_CONFIG,

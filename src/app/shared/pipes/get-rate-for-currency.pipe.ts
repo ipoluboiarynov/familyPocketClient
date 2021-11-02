@@ -12,9 +12,9 @@ export class GetRateForCurrencyPipe implements PipeTransform {
     let found_rate = rates_array.find(rate => rate[0] === currency.name);
     if (found_rate) {
       if (currency.base) {
-        return (1 / found_rate[1]).toFixed(4);
+        return (1 / found_rate[1]).toFixed(2);
       } else {
-        return (+found_rate[1]).toFixed(4);
+        return (+found_rate[1]).toFixed(2);
       }
     }
     return '-';

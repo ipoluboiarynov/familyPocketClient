@@ -21,7 +21,7 @@ export class RatesService {
       let rates = null;
       let ratesString = localStorage.getItem("rates");
       let today = new Date();
-      let todayString = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      let todayString = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + ("0" + today.getDate()).slice(-2);
       if (ratesString && JSON.parse(ratesString) && JSON.parse(ratesString).date == todayString) {
         rates = JSON.parse(ratesString);
         resolve(rates);

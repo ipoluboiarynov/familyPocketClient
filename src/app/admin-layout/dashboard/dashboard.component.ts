@@ -1,6 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Color, Label, PluginServiceGlobalRegistrationAndOptions, SingleDataSet} from "ng2-charts";
 import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
+import {Account} from "../../shared/models/Account";
+import {AccountService} from "../../shared/services/account.service";
+import {ToastrService} from "ngx-toastr";
+import {CurrencyService} from "../../shared/services/currency.service";
+import {Currency} from "../../shared/models/Currency";
+import {RatesService} from "../../shared/services/rates.service";
+import {Rates} from "../../shared/models/Rates";
 
 @Component({
   selector: 'app-dashboard',
@@ -64,11 +71,53 @@ export class DashboardComponent implements OnInit {
   }];
 
 
+  ///////////////////////////////////////////////////////
+
+  accounts: Account[] = [];
+  currencies: Currency[] = [];
+  rates!: Rates;
+  totalBalance: number = 0;
 
 
-  constructor() { }
+
+  constructor(private accountService: AccountService,
+              private currencyService: CurrencyService,
+              private ratesService: RatesService,
+              private toast: ToastrService
+  ) { }
 
   ngOnInit(): void {
+    this.getAllAccounts();
+    this.getAllCurrencies();
+  }
+
+  getAllAccounts() {
+    this.accountService.getAll().subscribe(
+      accounts => {
+      this.accounts = accounts;
+      this.accounts.map(value => {
+        this.totalBalance += value?.balance?? 0;
+      })
+    },
+      error => {
+        this.toast.error(error.error.message ?? 'Accounts are not downloaded.');
+      }
+    );
+  }
+
+  getAllCurrencies() {
+    this.currencyService.getAll().subscribe(
+      currencies => {
+        this.ratesService.getRates().then((rates: Rates) => {
+          this.rates = rates;
+          console.log(rates)
+          this.currencies = currencies;
+        });
+
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Currencies are not downloaded.');
+      });
   }
 
 }

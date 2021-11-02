@@ -12,7 +12,8 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">@</span>
                 </div>
-                <input type="text" class="form-control" formControlName="name" aria-label="Name" aria-describedby="Name">
+                <input type="text" class="form-control" formControlName="name" aria-label="Name" aria-describedby="Name"
+                [value]="'value'">
                 <div class="input-group-append">
                   <button class="btn btn-outline-light" type="submit" id="edit-name">Change</button>
                 </div>
@@ -325,7 +326,7 @@
                 </th>
                 <td class="budget text-center"><i [ngClass]="[account.icon, 'fs-32']"></i></td>
                 <td class="budget text-center">{{account.startBalance}}</td>
-                <td class="budget text-center">{{account.startDate}}</td>
+                <td class="budget text-center">{{account.startDate | date: 'yyyy-MM-dd'}}</td>
                 <td class="budget text-center">{{account.creditLimit}}</td>
                 <td class="budget text-center">{{account.currency.name?? '-'}}</td>
                 <td class="budget text-center">{{account.balance?? '-'}}</td>
@@ -359,7 +360,8 @@
             <div class="d-flex flex-grow-1 justify-content-center align-items-center mb-3">
               <h4 class="card-title text-uppercase m-0 ml-2">Filters</h4>
             </div>
-            <button type="button" class="btn btn-sm btn-slack btn-icon ml-auto mb-3">
+            <button type="button" class="btn btn-sm btn-slack btn-icon ml-auto mb-3"
+                    (click)="open(filterModal, 'filter')">
               <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
             </button>
           </div>
@@ -387,8 +389,8 @@
                     </div>
                   </div>
                 </th>
-                <td class="budget text-center">{{filter.startDate | date:'yyyy-mm-dd'}}</td>
-                <td class="budget text-center">{{filter.endDate | date:'yyy-mm-dd'}}</td>
+                <td class="budget text-center">{{filter.startDate | date:'yyyy-MM-dd'}}</td>
+                <td class="budget text-center">{{filter.endDate | date:'yyyy-MM-dd'}}</td>
                 <td class="budget text-center">{{filter.recordType}}</td>
                 <td>
                   <select class="form-control form-control-sm" [id]="i + '-filter-accounts'">
@@ -404,13 +406,13 @@
                 </td>
                 <td class="text-right">
                   <div dropdown class="dropdown no-caret" [dropup]="true">
-                    <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
-                       aria-controls="dropdown-dropup">
+                    <a id="dropUp-filter" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
+                       aria-controls="dropUp-filter">
                       <i class=" fas fa-ellipsis-v"> </i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
-                      <a href="javascript:void(0)" class="dropdown-item">Edit</a>
-                      <a href="javascript:void(0)" class="dropdown-item">Delete</a>
+                      <a href="javascript:void(0)" class="dropdown-item" (click)="open(filterModal, 'filter', filter)">Edit</a>
+                      <a href="javascript:void(0)" class="dropdown-item" (click)="deleteFilter(filter)">Delete</a>
                     </div>
                   </div>
                 </td>
@@ -656,14 +658,14 @@
                   <span class="input-group-text"><i class="ni ni-image"></i></span>
                 </div>
                 <select formControlName="accountIcon" class="form-control fontawesome-icons">
-                  <option value="" disabled selected hidden>Select Icon</option>
+                  <option value="null" disabled selected hidden>Select Icon</option>
                   <option *ngFor="let accountIcon of ACCOUNT_ICONS" [ngValue]="accountIcon.value" [innerHTML]="accountIcon.name"></option>
                 </select>
               </div>
             </div>
             <!--  Balance / Date  -->
             <div class="row">
-              <div class="col-12 col-sm-6">
+              <div class="col-12 col-md-6">
                 <label class="form-control-label" for="acc_balance">Start Balance</label>
                 <div class="form-group mb-2">
                   <div class="input-group input-group-alternative">
@@ -674,10 +676,21 @@
                   </div>
                 </div>
               </div>
-              <div class="col-12 col-sm-6">
+              <div class="col-12 col-md-6">
+                <label class="form-control-label" for="acc_date">Start Date</label>
                 <div class="form-group mb-2">
-                  <label class="form-control-label" for="acc_date">Start Date</label>
-                  <input formControlName="accountDate" class="form-control" type="date" id="acc_date">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                    </div>
+                    <input type="text"
+                           id="acc_date"
+                           placeholder="Set Date"
+                           class="form-control"
+                           bsDatepicker
+                           formControlName="accountDate"
+                           [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
+                  </div>
                 </div>
               </div>
             </div>
@@ -686,7 +699,7 @@
               <div class="col-6">
                 <div class="form-group mb-3">
                   <label class="form-control-label" for="acc_color">Color</label>
-                  <input formControlName="accountColor" class="form-control" type="color" id="acc_color">
+                  <input formControlName="accountColor" class="form-control" value="#ffffff" type="color" id="acc_color">
                 </div>
               </div>
               <div class="col-6">
@@ -696,9 +709,9 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-world-2"></i></span>
                     </div>
-                    <select formControlName="accountCurrency" class="form-control" id="acc_currency">
-                      <option value="" disabled selected hidden>Select</option>
-                      <option *ngFor="let currency of currencies" [value]="currency">{{currency.name}}</option>
+                    <select formControlName="accountCurrency" class="form-control" id="acc_currency" [compareWith]="compareById">
+                      <option value="null" disabled selected hidden>Select</option>
+                      <option *ngFor="let currency of currencies" [ngValue]="currency">{{currency.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -710,9 +723,9 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-money-check-alt"></i></span>
                 </div>
-                <select formControlName="accountType" class="form-control fontawesome-icons">
-                  <option value="" disabled selected hidden>Select Type</option>
-                  <option *ngFor="let accountType of accountTypes" [value]="accountType">{{accountType.name}}</option>
+                <select formControlName="accountType" class="form-control fontawesome-icons" [compareWith]="compareById">
+                  <option value="null" disabled selected hidden>Select Type</option>
+                  <option *ngFor="let accountType of accountTypes" [ngValue]="accountType">{{accountType.name}}</option>
                 </select>
               </div>
             </div>
@@ -744,6 +757,109 @@
   </div>
 </ng-template>
 
+<!--      Modal Filter    -->
+<ng-template #filterModal let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card bg-secondary shadow border-0 mb-0">
+        <div class="card-header bg-white pb-0">
+          <div class="text-muted text-center mb-3">
+            <h3>{{isNew ? 'Add' : 'Edit'}} Filter</h3>
+          </div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-2" *ngIf="formFilter">
+          <form [formGroup]="formFilter" (ngSubmit)="isNew ? addFilter() : updateFilter()">
+            <!--      Name      -->
+            <div class="form-group mb-3">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-tag"></i></span>
+                </div>
+                <input formControlName="filterName" class="form-control" placeholder="Name" type="text">
+              </div>
+            </div>
+            <!--    startDate-->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                </div>
+                <input type="text"
+                       placeholder="Datepicker"
+                       class="form-control"
+                       bsDatepicker
+                       formControlName="filterStartDate"
+                       [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
+                <div class="input-group-append">
+                  <span class="input-group-text">From</span>
+                </div>
+              </div>
+            </div>
+            <!--      endDate      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                </div>
+                <input type="text"
+                       placeholder="Datepicker"
+                       formControlName="filterEndDate"
+                       class="form-control"
+                       bsDatepicker
+                       [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
+                <div class="input-group-append">
+                  <span class="input-group-text">To</span>
+                </div>
+              </div>
+            </div>
+            <!--      Record Type      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-exchange-alt"></i></span>
+                </div>
+                <select formControlName="filterRecordType" class="form-control">
+                  <option value="null" disabled selected hidden>Select Record Type</option>
+                  <option *ngFor="let recordType of RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
+                </select>
+              </div>
+            </div>
+            <!--      Categories      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-sitemap"></i></span>
+                </div>
+                <select formControlName="filterCategories" class="form-control" [compareWith]="compareById" multiple>
+                  <option value="null" disabled selected hidden>Select Categories</option>
+                  <option *ngFor="let category of categories" [ngValue]="category">{{category.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--      Accounts      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-university"></i></span>
+                </div>
+                <select formControlName="filterAccounts" class="form-control" [compareWith]="compareById" multiple>
+                  <option value="null" disabled selected hidden>Select Accounts</option>
+                  <option *ngFor="let account of accounts" [ngValue]="account">{{account.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--      Buttons      -->
+            <div class="d-flex justify-content-between my-4">
+              <button type="submit" class="btn btn-success" [disabled]="formFilter.invalid || formFilter.disabled">{{isNew ? 'Add' : 'Edit'}}</button>
+              <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">Dismiss</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <!--      Modal Template    -->
 <ng-template #templateModal let-c="close" let-d="dismiss">
   <div class="modal-content">
@@ -751,7 +867,7 @@
       <div class="card bg-secondary shadow border-0 mb-0">
         <div class="card-header bg-white pb-0">
           <div class="text-muted text-center mb-3">
-            <h3>{{isNew ? 'Add' : 'Edit'}} Category</h3>
+            <h3>{{isNew ? 'Add' : 'Edit'}} Template</h3>
           </div>
         </div>
         <div class="card-body px-lg-5 py-lg-2">
@@ -771,9 +887,9 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-sitemap"></i></span>
                 </div>
-                <select formControlName="templateCategory" class="form-control">
+                <select formControlName="templateCategory" class="form-control" [compareWith]="compareById">
                   <option value="null" disabled selected hidden>Select Category</option>
-                  <option *ngFor="let category of categories" [value]="category">{{category.name}}</option>
+                  <option *ngFor="let category of categories" [ngValue]="category">{{category.name}}</option>
                 </select>
               </div>
             </div>
@@ -783,9 +899,9 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-university"></i></span>
                 </div>
-                <select formControlName="templateAccount" class="form-control">
+                <select formControlName="templateAccount" class="form-control" [compareWith]="compareById">
                   <option value="null" disabled selected hidden>Select Account</option>
-                  <option *ngFor="let account of accounts" [value]="account">{{account.name}}</option>
+                  <option *ngFor="let account of accounts" [ngValue]="account">{{account.name}}</option>
                 </select>
               </div>
             </div>
@@ -797,7 +913,7 @@
                 </div>
                 <select formControlName="templateRecordType" class="form-control">
                   <option value="null" disabled selected hidden>Select Record Type</option>
-                  <option *ngFor="let recordType of RECORD_TYPES" [ngValue]="recordType.id">{{recordType.name}}</option>
+                  <option *ngFor="let recordType of RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
                 </select>
               </div>
             </div>

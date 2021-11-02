@@ -31,10 +31,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.scss",
               "src/assets/vendor/nucleo/css/nucleo.css",
               "src/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/assets/scss/argon.scss"
+              "src/assets/scss/argon.scss",
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -107,10 +108,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.scss",
               "src/assets/vendor/nucleo/css/nucleo.css",
               "src/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/assets/scss/argon.scss"
+              "src/assets/scss/argon.scss",
+              "src/styles.scss"
             ],
             "scripts": []
           }

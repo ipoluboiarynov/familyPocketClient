@@ -11,7 +11,7 @@ import {Category} from "../../shared/models/Category";
 import {CategoryService} from "../../shared/services/category.service";
 import {User} from "../../shared/models/User";
 import {UserService} from "../../shared/services/user.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Filter} from "../../shared/models/Filter";
 import {FilterService} from "../../shared/services/filter.service";
 import {Template} from "../../shared/models/Template";
@@ -81,9 +81,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ];
 
   RECORD_TYPES = [
-    {id: 0, name: 'INCOME'},
-    {id: 1, name: 'EXPENSE'},
-    {id: 2, name: 'TRANSFER'}
+    'INCOME',
+    'EXPENSE',
+    'TRANSFER'
   ];
 
   aSub!: Subscription;
@@ -113,9 +113,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
   formCategory!: FormGroup;
   formAccount!: FormGroup;
   formTemplate!: FormGroup;
+  formFilter!: FormGroup;
 
   isNew: boolean = false;
   updateObject!: any;
+  closeResult!: string;
 
   constructor(private accountService: AccountService,
               private accountTypeService: AccountTypeService,
@@ -128,8 +130,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
               private ratesService: RatesService,
               private modalService: NgbModal
   ) { }
-
-  closeResult!: string;
 
   ngOnInit(): void {
     this.getAllAccounts();
@@ -169,52 +169,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAllAccounts(): void {
-    let today = new Date();
-    let todayString = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    this.aSub = this.accountService.getAll(todayString).subscribe(
-      accounts => {
-        this.accounts = accounts;
-      },
-      error => {
-        this.toast.error(error.error.message ?? 'Accounts are not downloaded.');
-      }
-    );
+  compareById(v1: any, v2: any) {
+    return v1?.id === v2?.id;
   }
 
-  getAllAccountTypes(): void {
-    this.bSub = this.accountTypeService.getAll().subscribe(
-      accountTypes => {
-        this.accountTypes = accountTypes;
-      },
-      error => {
-        this.toast.error(error.error.message ?? 'Account Types are not downloaded.');
-      }
-    );
-  }
-
-  getAllCurrencies(): void {
-    this.cSub = this.currencyService.getAll().subscribe(
-      currencies => {
-        this.currencies = currencies;
-      },
-      error => {
-        this.toast.error(error.error.message ?? 'Currencies are not downloaded.');
-      }
-    );
-  }
-
-  getAllCategories(): void {
-    this.dSub = this.categoryService.getAll().subscribe(
-      categories => {
-        this.categories = categories;
-        this.expenses = categories.filter((category: Category) => category.expense);
-        this.incomes = categories.filter((category: Category) => !category.expense);
-      },
-      error => {
-        this.toast.error(error.error.message ?? 'Categories are not downloaded.');
-      }
-    );
+  convertDateToString(date: Date): string {
+    date.setDate(date.getDate() + 1);
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + ("0" + date.getDate()).slice(-2);
   }
 
   getUserInfo(): void {
@@ -236,7 +197,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (this.user && this.userForm.valid && this.userForm.touched) {
       this.user.email = this.userForm.get('email')?.value;
       this.user.name = this.userForm.get('name')?.value;
-      console.log(this.user);
       this.fSub = this.userService.updateUser(this.user).subscribe(
         newUser => {
           this.toast.success('User was successfully updated!')
@@ -246,29 +206,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
           this.toast.error(error.error.message ?? 'User was not updated!');
         });
     }
-  }
-
-  getAllFilters() {
-    this.gSub = this.filterService.getAll().subscribe(
-      filters => {
-        this.filters = filters;
-      },
-      error => {
-        this.toast.error(error.error.message ?? 'Filters are not downloaded.');
-      }
-    );
-  }
-
-  getAllTemplates() {
-    this.hSub = this.templateService.getAll().subscribe(
-      templates => {
-        console.log(templates)
-        this.templates = templates;
-      },
-      error => {
-        this.toast.error(error.error.message ?? 'Templates are not downloaded.');
-      }
-    );
   }
 
   uploadRates() {
@@ -302,9 +239,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
       case 'template':
         object? this.startFormTemplate(object) : this.startFormTemplate();
         break;
+      case 'filter':
+        object? this.startFormFilter(object) : this.startFormFilter();
+        break;
     }
     this.modalService.open(content, { windowClass: 'modal-mini', size: 'sm', centered: true }).result.then((result) => {
-      // console.log(result);
         this.closeResult = 'Closed with: $result';
       }, (reason: any) => {
         this.closeResult = 'Dismissed $this.getDismissReason(reason)';
@@ -314,6 +253,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
   /////////////////////////////////////////////////////////////////////////////
   //                         Account Type Operations                         //
   /////////////////////////////////////////////////////////////////////////////
+
+  getAllAccountTypes(): void {
+    this.bSub = this.accountTypeService.getAll().subscribe(
+      accountTypes => {
+        this.accountTypes = accountTypes;
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Account Types are not downloaded.');
+      }
+    );
+  }
 
   startFormAccountType(accountType?: any) {
     if (accountType) {
@@ -413,6 +363,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
   /////////////////////////////////////////////////////////////////////////////
   //                             Currency Operations                         //
   /////////////////////////////////////////////////////////////////////////////
+
+  getAllCurrencies(): void {
+    this.cSub = this.currencyService.getAll().subscribe(
+      currencies => {
+        this.currencies = currencies;
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Currencies are not downloaded.');
+      }
+    );
+  }
 
   startFormCurrency(currency?: any) {
     if (currency) {
@@ -517,6 +478,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
   //                             Category Operations                         //
   /////////////////////////////////////////////////////////////////////////////
 
+  getAllCategories(): void {
+    this.dSub = this.categoryService.getAll().subscribe(
+      categories => {
+        this.categories = categories;
+        this.expenses = categories.filter((category: Category) => category.expense);
+        this.incomes = categories.filter((category: Category) => !category.expense);
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Categories are not downloaded.');
+      }
+    );
+  }
+
   startFormCategory(expense?: boolean, category?: any) {
     if (category) {
       this.updateObject = category;
@@ -620,6 +594,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
   //                             Account Operations                          //
   /////////////////////////////////////////////////////////////////////////////
 
+  getAllAccounts(): void {
+    this.aSub = this.accountService.getAll().subscribe(
+      accounts => {
+        this.accounts = accounts;
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Accounts are not downloaded.');
+      }
+    );
+  }
+
   startFormAccount(account?: any) {
 
     if (account) {
@@ -628,7 +613,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         accountName: new FormControl(account.name, [Validators.required]),
         accountIcon: new FormControl(account.icon, [Validators.required]),
         accountBalance: new FormControl(account.startBalance, [Validators.required]),
-        accountDate: new FormControl(account.startDate, [Validators.required]),
+        accountDate: new FormControl(account.startDate ? new Date(account.startDate) : null, [Validators.required]),
         accountColor: new FormControl(account.color, [Validators.required]),
         accountCurrency: new FormControl(account.currency, [Validators.required]),
         accountType: new FormControl(account.accountType, [Validators.required]),
@@ -637,12 +622,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
     } else {
       this.formAccount = new FormGroup({
         accountName: new FormControl('', [Validators.required]),
-        accountIcon: new FormControl('', [Validators.required]),
+        accountIcon: new FormControl(null, [Validators.required]),
         accountBalance: new FormControl(0, [Validators.required]),
-        accountDate: new FormControl('', [Validators.required]),
+        accountDate: new FormControl(null, [Validators.required]),
         accountColor: new FormControl('#ffffff', [Validators.required]),
-        accountCurrency: new FormControl('', [Validators.required]),
-        accountType: new FormControl('', [Validators.required]),
+        accountCurrency: new FormControl(null, [Validators.required]),
+        accountType: new FormControl(null, [Validators.required]),
         accountLimit: new FormControl(0, [Validators.required])
       });
     }
@@ -653,13 +638,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
       name: this.formAccount.get('accountName')?.value,
       icon: this.formAccount.get('accountIcon')?.value,
       startBalance: this.formAccount.get('accountBalance')?.value,
-      startDate: this.formAccount.get('accountDate')?.value,
+      startDate: this.formAccount.get('accountDate')?.value ? this.convertDateToString(this.formAccount.get('accountDate')?.value) :
+        this.convertDateToString(new Date()),
       color: this.formAccount.get('accountColor')?.value,
       currency: this.formAccount.get('accountCurrency')?.value,
       accountType: this.formAccount.get('accountType')?.value,
       creditLimit: this.formAccount.get('accountLimit')?.value
     };
-    console.log(account);
     this.formAccount.disable();
     this.accountService.add(account).subscribe(
       result => {
@@ -679,7 +664,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.name = this.formAccount.get('accountName')?.value;
     this.updateObject.icon = this.formAccount.get('accountIcon')?.value;
     this.updateObject.startBalance = this.formAccount.get('accountBalance')?.value;
-    this.updateObject.startDate = this.formAccount.get('accountDate')?.value;
+    this.updateObject.startDate = this.formAccount.get('accountDate')?.value ? this.convertDateToString(this.formAccount.get('accountDate')?.value) :
+      this.convertDateToString(new Date());
     this.updateObject.color = this.formAccount.get('accountColor')?.value;
     this.updateObject.currency = this.formAccount.get('accountCurrency')?.value;
     this.updateObject.accountType = this.formAccount.get('accountType')?.value;
@@ -742,13 +728,149 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   /////////////////////////////////////////////////////////////////////////////
+  //                             Filters Operations                          //
+  /////////////////////////////////////////////////////////////////////////////
+
+  getAllFilters() {
+    this.gSub = this.filterService.getAll().subscribe(
+      filters => {
+        this.filters = filters;
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Filters are not downloaded.');
+      }
+    );
+  }
+
+  startFormFilter(filter?: any) {
+    if (filter) {
+      this.updateObject = filter;
+      this.formFilter = new FormGroup({
+        filterName: new FormControl(filter.name, [Validators.required]),
+        filterStartDate: new FormControl(filter.startDate ? new Date(filter.startDate) : null),
+        filterEndDate: new FormControl(filter.endDate ? new Date(filter.endDate) : null),
+        filterRecordType: new FormControl(filter.recordType),
+        filterCategories: new FormControl(filter.categories?? []),
+        filterAccounts: new FormControl(filter.accounts?? [])
+      });
+    } else {
+      this.formFilter = new FormGroup({
+        filterName: new FormControl('', [Validators.required]),
+        filterStartDate: new FormControl(null),
+        filterEndDate: new FormControl(null),
+        filterRecordType: new FormControl(null),
+        filterCategories: new FormControl([]),
+        filterAccounts: new FormControl([])
+      });
+    }
+  }
+
+  addFilter() {
+    let filter: Filter = {
+      name: this.formFilter.get('filterName')?.value,
+      startDate: this.formFilter.get('filterStartDate')?.value ? this.convertDateToString(this.formFilter.get('filterStartDate')?.value) : undefined,
+      endDate: this.formFilter.get('filterEndDate')?.value ? this.convertDateToString(this.formFilter.get('filterEndDate')?.value) : undefined,
+      recordType: this.formFilter.get('filterRecordType')?.value,
+      categories: this.formFilter.get('filterCategories')?.value,
+      accounts: this.formFilter.get('filterAccounts')?.value
+    };
+    this.formFilter.disable();
+    this.filterService.add(filter).subscribe(
+      result => {
+        this.toast.success('New Filter was created.');
+        this.formFilter.reset();
+        this.formFilter.enable();
+        this.modalService.dismissAll();
+        this.getAllFilters();
+      },
+      error => {
+        this.formFilter.enable();
+        this.toast.error(error.errors.message?? 'New Filter is NOT added! Try again.')
+      });
+  }
+
+  updateFilter() {
+    this.updateObject.name = this.formFilter.get('filterName')?.value;
+    this.updateObject.startDate = this.formFilter.get('filterStartDate')?.value ? this.convertDateToString(this.formFilter.get('filterStartDate')?.value) : undefined;
+    this.updateObject.endDate = this.formFilter.get('filterEndDate')?.value ? this.convertDateToString(this.formFilter.get('filterEndDate')?.value) : undefined;
+    this.updateObject.recordType = this.formFilter.get('filterRecordType')?.value;
+    this.updateObject.categories = this.formFilter.get('filterCategories')?.value;
+    this.updateObject.accounts = this.formFilter.get('filterAccounts')?.value;
+    this.formFilter.disable();
+    this.filterService.update(this.updateObject).subscribe(
+      value => {
+        this.toast.success('Filter was updated.');
+        this.formFilter.reset();
+        this.formFilter.enable();
+        this.modalService.dismissAll();
+        this.getAllFilters();
+        this.updateObject = null;
+      },
+      error => {
+        this.formFilter.enable();
+        this.toast.error(error.errors?.message?? 'Filter is NOT updated! Try again.')
+      }
+    );
+  }
+
+  deleteFilter(filter: Filter) {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        cancelButton: 'btn btn-success',
+        confirmButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "Delete " + filter.name + "?",
+      icon: 'warning',
+      showCancelButton: true,
+      buttonsStyling: false,
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value && filter.id) {
+        this.filterService.delete(filter.id).subscribe(
+          value => {
+            swalWithBootstrapButtons.fire({
+              title: 'Deleted!',
+              text: filter.name + ' has been deleted.',
+              icon: 'success'
+            }).then();
+            this.getAllFilters();
+          },
+          error => {
+            swalWithBootstrapButtons.fire({
+              title: 'Error!',
+              text: error.error?.message?? filter.name + ' is NOT deleted! Try again.',
+              icon: 'error'
+            }).then();
+          }
+        );
+      }
+    })
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
   //                             Templates Operations                        //
   /////////////////////////////////////////////////////////////////////////////
+
+  getAllTemplates() {
+    this.hSub = this.templateService.getAll().subscribe(
+      templates => {
+        this.templates = templates;
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Templates are not downloaded.');
+      }
+    );
+  }
 
   startFormTemplate(template?: any) {
     if (template) {
       this.updateObject = template;
-      console.log(template.recordType)
       this.formTemplate = new FormGroup({
         templateName: new FormControl(template.name, [Validators.required]),
         templateCategory: new FormControl(template.category),
@@ -776,7 +898,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
       amount: this.formTemplate.get('templateAmount')?.value
     };
     this.formTemplate.disable();
-    console.log(template)
     this.templateService.add(template).subscribe(
       result => {
         this.toast.success('New Template was created.');
@@ -853,6 +974,5 @@ export class SettingsComponent implements OnInit, OnDestroy {
       }
     })
   }
-
 
 }

@@ -16,7 +16,11 @@ export class AccountService {
     }
   }
 
-  getAll(date: string): Observable<any> {
+  getAll(date?: string): Observable<any> {
+    if(!date) {
+      let today = new Date();
+      date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + ("0" + today.getDate()).slice(-2);
+    }
     return this.http.post<any>('/api/account/all', {id: this.userId, date: date});
   }
 
