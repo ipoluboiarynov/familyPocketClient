@@ -22,10 +22,11 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ChartsModule} from "ng2-charts";
 import {ProgressbarModule} from "ngx-bootstrap/progressbar";
 import {BsDropdownModule} from "ngx-bootstrap/dropdown";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {GetRateForCurrencyPipe} from './shared/pipes/get-rate-for-currency.pipe';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
+import {HttpRequestWithAccessControlsInterceptor} from "./shared/interceptors/httpRequestWithAccessControls.interceptor";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -67,6 +68,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpRequestWithAccessControlsInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {User} from "../models/User";
 import {Observable, throwError} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, tap} from "rxjs/operators";
+import {environment} from "../../../environments/environment.prod";
 
 export const TOKEN_COOKIE_NAME = 'access_token';
 
@@ -10,15 +11,16 @@ export const TOKEN_COOKIE_NAME = 'access_token';
   providedIn: 'root'
 })
 export class AuthService {
+  baseUrl: string = environment.backend.baseUrl;
 
   constructor(private http: HttpClient) {}
 
   register(user: User): Observable<any> {
-    return this.http.post<any>('/api/auth/register', user).pipe(catchError(this.handleError));
+    return this.http.post<any>(this.baseUrl + '/api/auth/register', user).pipe(catchError(this.handleError));
   }
 
   login(user: User): Observable<any> {
-    return this.http.post<any>('/api/auth/login', user).pipe(tap(user => {
+    return this.http.post<any>(this.baseUrl + '/api/auth/login', user).pipe(tap(user => {
       localStorage.setItem('userId', user.id.toString());
       }),
       catchError(this.handleError)
@@ -26,7 +28,7 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post<any>('/api/auth/logout', null).pipe(
+    return this.http.post<any>(this.baseUrl + '/api/auth/logout', null).pipe(
       tap(() => {
         localStorage.clear();
       }),
