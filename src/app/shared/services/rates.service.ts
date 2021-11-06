@@ -2,14 +2,12 @@ import {Injectable} from "@angular/core";
 import {Rates} from "../models/Rates";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RatesService {
   userId: number = 0;
-  baseUrl: string = environment.backend.baseUrl;
 
   constructor(private http: HttpClient) {
     let getUserId = localStorage.getItem('userId');
@@ -39,6 +37,6 @@ export class RatesService {
   }
 
   uploadRates(date: string): Observable<any> {
-    return this.http.post<any>(this.baseUrl + '/api/currency/rates', date);
+    return this.http.post<any>('/api/currency/rates', date);
   }
 }
