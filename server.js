@@ -7,16 +7,16 @@ import fs from 'fs';
 const app = express();
 const herokuBackendUrl = 'https://family-pocket--backend.herokuapp.com';
 const rootPath = path.resolve();
-const appName = 'family-pocket--backend';
+const appName = 'familyPocketClient';
 
 app.use('/api', proxy.createProxyMiddleware({
   target: herokuBackendUrl,
   changeOrigin: true,
   secure: true,
-  withCredentials: true
-  // pathRewrite: {
-  //   "^/api/": ""
-  // }
+  withCredentials: true,
+  pathRewrite: {
+    "^/api/": ""
+  }
 }));
 
 app.use(express.static(rootPath + '/dist/' + appName));
