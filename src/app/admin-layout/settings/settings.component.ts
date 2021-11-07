@@ -175,7 +175,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   convertDateToString(date: Date): string {
     date.setDate(date.getDate() + 1);
-    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + ("0" + date.getDate()).slice(-2);
+    return date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
   }
 
   getUserInfo(): void {

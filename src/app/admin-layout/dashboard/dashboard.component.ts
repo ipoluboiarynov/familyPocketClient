@@ -88,7 +88,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllAccounts();
-    // this.getAllCurrencies();
+    this.getAllCurrencies();
   }
 
   getAllAccounts() {

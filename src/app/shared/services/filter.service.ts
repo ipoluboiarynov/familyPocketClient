@@ -23,6 +23,7 @@ export class FilterService {
   }
 
   add(filter: Filter): Observable<any>{
+    console.log(filter);
     filter.userId = this.userId;
     return this.http.post<any>('/api/filter/add', filter);
   }
