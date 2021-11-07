@@ -1,22 +1,23 @@
 import * as https from "https";
 import express from 'express';
-import proxy from 'http-proxy-middleware';
+import proxy, {fixRequestBody} from 'http-proxy-middleware';
 import path from 'path';
 import fs from 'fs';
 
 const app = express();
 const herokuBackendUrl = 'https://family-pocket--backend.herokuapp.com';
 const rootPath = path.resolve();
-const appName = 'familyPocketClient';
+const appName = 'family-pocket--backend';
 
 app.use('/api', proxy.createProxyMiddleware({
   target: herokuBackendUrl,
   changeOrigin: true,
   secure: true,
   withCredentials: true,
-  pathRewrite: {
-    "^/api/": ""
-  }
+  onProxyReq: fixRequestBody
+  // pathRewrite: {
+  //   "^/api/": ""
+  // }
 }));
 
 app.use(express.static(rootPath + '/dist/' + appName));
