@@ -5,9 +5,6 @@ import {Router} from "@angular/router";
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 
-const TOKEN_HEADER = 'Authorization';
-const USER_HEADER = 'userId';
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService,
@@ -24,7 +21,8 @@ export class AuthInterceptor implements HttpInterceptor {
         setHeaders: {
           'Authorization': token,
           'userId': userId
-        }
+        },
+        withCredentials: true
       });
     }
     return next.handle(authRequest).pipe(

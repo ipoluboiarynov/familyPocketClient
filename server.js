@@ -13,7 +13,7 @@ app.use('/api', proxy.createProxyMiddleware({
   target: herokuBackendUrl,
   changeOrigin: true,
   secure: true,
-  withCredentials: false,
+  withCredentials: true,
   pathRewrite: {
     "^/api/": ""
   }

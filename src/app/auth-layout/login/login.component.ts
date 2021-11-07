@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         password: this.form.get('password')?.value
       };
       this.form.disable();
-      console.log(user);
       this.aSub = this.auth.login(user).subscribe(
         data => {
           if (data.token && data.id) {
