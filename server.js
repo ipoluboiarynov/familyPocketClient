@@ -7,14 +7,13 @@ import fs from 'fs';
 const app = express();
 const herokuBackendUrl = 'https://family-pocket--backend.herokuapp.com';
 const rootPath = path.resolve();
-const appName = 'family-pocket--backend';
+const appName = 'familyPocketClient';
 
 app.use('/api', proxy.createProxyMiddleware({
   target: herokuBackendUrl,
   changeOrigin: true,
   secure: true,
   withCredentials: true,
-  onProxyReq: fixRequestBody
   // pathRewrite: {
   //   "^/api/": ""
   // }
@@ -22,12 +21,12 @@ app.use('/api', proxy.createProxyMiddleware({
 
 app.use(express.static(rootPath + '/dist/' + appName));
 
-// app.get('*', function (req, res, next) {
-//   if (req.headers['x-forwarded-proto'] !== 'https')
-//     res.redirect(herokuBackendUrl + req.url)
-//   else
-//     next()
-// })
+app.get('*', function (req, res, next) {
+  if (req.headers['x-forwarded-proto'] !== 'https')
+    res.redirect(herokuBackendUrl + req.url)
+  else
+    next()
+})
 
 app.get('/*', function (req, res) {
   const fullPath = path.join(rootPath + '/dist/' + appName + '/index.html');
