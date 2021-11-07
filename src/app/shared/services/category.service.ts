@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Category} from "../models/Category";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,10 @@ import {Category} from "../models/Category";
 export class CategoryService {
   userId: number = 0;
 
-  constructor(private http: HttpClient) {
-    let getUserId = localStorage.getItem('userId');
-    if (getUserId !== null) {
+  constructor(private http: HttpClient,
+              private auth: AuthService) {
+    let getUserId = this.auth.getUserId();
+    if (getUserId) {
       this.userId = +getUserId;
     }
   }

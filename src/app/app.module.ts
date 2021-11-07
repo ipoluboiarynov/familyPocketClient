@@ -26,7 +26,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {GetRateForCurrencyPipe} from './shared/pipes/get-rate-for-currency.pipe';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
-import {HttpRequestWithAccessControlsInterceptor} from "./shared/interceptors/httpRequestWithAccessControls.interceptor";
+import {AuthInterceptor} from "./shared/interceptors/auth.interceptor";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -71,7 +71,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: HttpRequestWithAccessControlsInterceptor,
+      useClass: AuthInterceptor,
       multi: true
     }
   ],

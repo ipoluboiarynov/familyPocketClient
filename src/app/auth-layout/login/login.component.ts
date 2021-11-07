@@ -17,7 +17,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(private auth: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private toast: ToastrService) { }
+              private toast: ToastrService) {
+    if (this.auth.isAuthenticated()) {
+      this.router.navigate(['/dashboard']).then();
+    }
+  }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -30,7 +34,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (params['registered']) {
         this.toast.success('You have been successfully registered.');
       } else if (params['accessDenied']) {
-        this.toast.error('Access denied. Login first!');
+        this.toast.error('Access denied. Please log in first.');
       } else if (params['sessionFailed']) {
         this.toast.warning('Session is over. Login again.');
       }
@@ -50,14 +54,29 @@ export class LoginComponent implements OnInit, OnDestroy {
         password: this.form.get('password')?.value
       };
       this.form.disable();
+      console.log(user);
       this.aSub = this.auth.login(user).subscribe(
-        () => {
-          this.router.navigate(['/dashboard']).then();
-       },
+        data => {
+          if (data.token && data.id) {
+            this.auth.saveToken(data?.token);
+            this.auth.saveUserId(data.id);
+            this.form.enable();
+            this.form.reset();
+            this.router.navigate(['/dashboard']).then();
+          } else {
+            this.form.enable();
+            this.toast.error('Response without token. Ask server admin.');
+          }
+        },
         error => {
-          this.toast.error(error.error.exception);
           this.form.enable();
-        });
+          if (error.error?.exception === 'BadCredentialsException') {
+            this.toast.error('Wrong email or password. Try again.');
+          } else {
+            this.toast.error(error.error?.exception ?? 'Login failed! Try again.');
+          }
+        }
+      );
     }
   }
 }

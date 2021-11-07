@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Filter} from "../models/Filter";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,10 @@ import {Filter} from "../models/Filter";
 export class FilterService {
   userId: number = 0;
 
-  constructor(private http: HttpClient) {
-    let getUserId = localStorage.getItem('userId');
-    if (getUserId !== null) {
+  constructor(private http: HttpClient,
+              private auth: AuthService) {
+    let getUserId = this.auth.getUserId();
+    if (getUserId) {
       this.userId = +getUserId;
     }
   }

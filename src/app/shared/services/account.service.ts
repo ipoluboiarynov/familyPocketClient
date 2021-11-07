@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Account} from "../models/Account";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,15 +10,16 @@ import {Account} from "../models/Account";
 export class AccountService {
   userId: number = 0;
 
-  constructor(private http: HttpClient) {
-    let getUserId = localStorage.getItem('userId');
-    if (getUserId !== null) {
+  constructor(private http: HttpClient,
+              private auth: AuthService) {
+    let getUserId = this.auth.getUserId();
+    if (getUserId) {
       this.userId = +getUserId;
     }
   }
 
   getAll(date?: string): Observable<any> {
-    if(!date) {
+    if (!date) {
       let today = new Date();
       date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + ("0" + today.getDate()).slice(-2);
     }
@@ -28,7 +30,7 @@ export class AccountService {
     return this.http.post<any>('/api/account/id', {id: id, date: date});
   }
 
-  add(account: Account): Observable<any>{
+  add(account: Account): Observable<any> {
     account.userId = this.userId;
     return this.http.post<any>('/api/account/add', account);
   }

@@ -4,49 +4,54 @@ import {Observable, throwError} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, tap} from "rxjs/operators";
 
-export const TOKEN_COOKIE_NAME = 'access_token';
+const TOKEN_NAME = 'access_token';
+const USER_KEY = 'user_id';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   register(user: User): Observable<any> {
     return this.http.post<any>('/api/auth/register', user).pipe(catchError(this.handleError));
   }
 
   login(user: User): Observable<any> {
-    return this.http.post<any>('/api/auth/login', user, {withCredentials: true}).pipe(tap(user => {
-      localStorage.setItem('userId', user.id.toString());
-      }),
-      catchError(this.handleError)
-    );
+    return this.http.post<any>('/api/auth/login', user).pipe(catchError(this.handleError));
   }
 
-  logout(): Observable<any> {
-    return this.http.post<any>('/api/auth/logout', null).pipe(
-      tap(() => {
-        localStorage.clear();
-      }),
-      catchError(this.handleError));
+  logout(): void {
+    window.sessionStorage.clear();
   }
 
   isAuthenticated(): boolean {
-    return this.isCookieWithTokenExists(TOKEN_COOKIE_NAME);
+    return !!this.getToken();
   }
 
-  isCookieWithTokenExists(name: string): boolean {
-    // TODO
-    let d = new Date();
-    d.setTime(d.getTime() + (1000));
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = name + "=new_value;path=/;" + expires;
-    return document.cookie.indexOf(name + '=') == -1;
+  saveToken(token: string): void {
+    window.sessionStorage.removeItem(TOKEN_NAME);
+    window.sessionStorage.setItem(TOKEN_NAME, token);
   }
+
+  getToken(): string | null {
+    return sessionStorage.getItem(TOKEN_NAME);
+  }
+
+  saveUserId(userId: number): void {
+    window.sessionStorage.removeItem(USER_KEY);
+    window.sessionStorage.setItem(USER_KEY, userId.toString());
+  }
+
+  getUserId(): string | null {
+    return sessionStorage.getItem(USER_KEY);
+  }
+
 
   handleError(error: HttpErrorResponse) {
     return throwError(error);
   }
+
 }

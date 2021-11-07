@@ -69,14 +69,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.auth.logout().subscribe(
-      () => {
-        this.router.navigate(['/login']).then();
-      },
-      error => {
-        this.toast.error(error.error?.message ?? "An error has occurred. Try again.");
-      }
-    );
+    this.auth.logout();
+    this.router.navigate(['/login']).then();
   }
 
   open(content: any) {
