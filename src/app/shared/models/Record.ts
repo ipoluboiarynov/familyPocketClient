@@ -1,11 +1,13 @@
+import {Category} from "./Category";
+import {Account} from "./Account";
+
 export interface Record {
   id?: number;
-  date: string;
-  type: any;
+  recordDate: string;
+  recordType: any;
   amount: number;
   comment?: string;
-  accountId: string;
-  categoryId: string;
+  account: Account;
+  category: Category;
   userId?: number;
-  currencyId: string;
 }

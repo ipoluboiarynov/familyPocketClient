@@ -27,6 +27,8 @@ import {GetRateForCurrencyPipe} from './shared/pipes/get-rate-for-currency.pipe'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
 import {AuthInterceptor} from "./shared/interceptors/auth.interceptor";
+import {DatePipe} from "@angular/common";
+import {ButtonsModule} from "ngx-bootstrap/buttons";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -48,22 +50,23 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FilterCategoriesByTypePipe,
     GetRateForCurrencyPipe
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot(),
-    CollapseModule.forRoot(),
-    PerfectScrollbarModule,
-    ReactiveFormsModule,
-    ChartsModule,
-    ProgressbarModule,
-    BsDropdownModule,
-    HttpClientModule,
-    FormsModule,
-    NgbModule,
-    BsDatepickerModule.forRoot()
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot(),
+        CollapseModule.forRoot(),
+        PerfectScrollbarModule,
+        ReactiveFormsModule,
+        ChartsModule,
+        ProgressbarModule,
+        BsDropdownModule,
+        HttpClientModule,
+        FormsModule,
+        NgbModule,
+        BsDatepickerModule.forRoot(),
+        ButtonsModule
+    ],
   providers: [
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
@@ -73,7 +76,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

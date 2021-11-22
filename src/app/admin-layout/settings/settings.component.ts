@@ -11,7 +11,7 @@ import {Category} from "../../shared/models/Category";
 import {CategoryService} from "../../shared/services/category.service";
 import {User} from "../../shared/models/User";
 import {UserService} from "../../shared/services/user.service";
-import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Filter} from "../../shared/models/Filter";
 import {FilterService} from "../../shared/services/filter.service";
 import {Template} from "../../shared/models/Template";
@@ -20,72 +20,13 @@ import {Rates} from "../../shared/models/Rates";
 import {RatesService} from "../../shared/services/rates.service";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import Swal from "sweetalert2";
+import { Constants } from "../../shared/global/constants";
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html'
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-  CURRENCY_ICONS = [
-    {name: '&#xf155; &nbsp; Dollar', value: 'fas fa-dollar-sign'},
-    {name: '&#xf153; &nbsp; Euro', value: 'fas fa-euro-sign'},
-    {name: '&#xf154; &nbsp; Pound', value: 'fas fa-pound-sign'},
-    {name: '&#xf158; &nbsp; Ruble', value: 'fas fa-ruble-sign'},
-    {name: '&#xf156; &nbsp; Rupee', value: 'fas fa-rupee-sign'},
-    {name: '&#xf157; &nbsp; Yen', value: 'fas fa-yen-sign'},
-    {name: '&#xf159; &nbsp; Won', value: 'fas fa-won-sign'},
-    {name: '&#xf51e; &nbsp; Other', value: 'fas fa-coins'}
-  ];
-
-  CATEGORY_ICONS = [
-    {name: '&#xf291; &nbsp; Shopping Basket', value: 'fas fa-shopping-basket'},
-    {name: '&#xf2db; &nbsp; Microchip', value: 'fas fa-microchip'},
-    {name: '&#xf53a; &nbsp; Money Bill Wave', value: 'fas fa-money-bill-wave'},
-    {name: '&#xf2f1; &nbsp; Sync Alt', value: 'fas fa-sync-alt'},
-    {name: '&#xf06b; &nbsp; Gifts', value: 'fas fa-gift'},
-    {name: '&#xf44b; &nbsp; Dumbbell', value: 'fas fa-dumbbell'},
-    {name: '&#xf4c0; &nbsp; Hand Holding', value: 'fas fa-hand-holding-usd'},
-    {name: '&#xf295; &nbsp; Percent', value: 'fas fa-percent'},
-    {name: '&#xf2e7; &nbsp; Utensils', value: 'fas fa-utensils'},
-    {name: '&#xf805; &nbsp; Hamburger', value: 'fas fa-hamburger'},
-    {name: '&#xf818; &nbsp; Pizza-slice', value: 'fas fa-pizza-slice'},
-    {name: '&#xf810; &nbsp; Ice-cream', value: 'fas fa-ice-cream'},
-    {name: '&#xf4d8; &nbsp; Seedling', value: 'fas fa-seedling'},
-    {name: '&#xf5d7; &nbsp; Bone', value: 'fas fa-bone'},
-    {name: '&#xf44e; &nbsp; Football-ball', value: 'fas fa-football-ball'},
-    {name: '&#xf553; &nbsp; T-shirt', value: 'fas fa-tshirt'},
-    {name: '&#xf19d; &nbsp; Graduation-cap', value: 'fas fa-graduation-cap'},
-    {name: '&#xf1b9; &nbsp; Car', value: 'fas fa-car'},
-    {name: '&#xf77d; &nbsp; Baby-carriage', value: 'fas fa-baby-carriage'},
-    {name: '&#xf3cd; &nbsp; Mobile', value: 'fas fa-mobile-alt'},
-    {name: '&#xf1eb; &nbsp; Wifi', value: 'fas fa-wifi'},
-    {name: '&#xf7d9; &nbsp; Tools', value: 'fas fa-tools'},
-    {name: '&#xf015; &nbsp; Home', value: 'fas fa-home'},
-    {name: '&#xf0e7; &nbsp; Bolt', value: 'fas fa-bolt'},
-    {name: '&#xf6c0; &nbsp; Baby', value: 'fas fa-baby'}
-  ];
-
-  ACCOUNT_ICONS = [
-    {name: '&#xf555; &nbsp; Wallet', value: 'fas fa-wallet'},
-    {name: '&#xf66f; &nbsp; Landmark', value: 'fas fa-landmark'},
-    {name: '&#xf09d; &nbsp; Credit Card', value: 'far fa-credit-card'},
-    {name: '&#xf51e; &nbsp; Coins', value: 'fas fa-coins'},
-    {name: '&#xf4d3; &nbsp; Piggy-bank', value: 'fas fa-piggy-bank'},
-    {name: '&#xf1f1; &nbsp; Master card', value: 'fab fa-cc-mastercard'},
-    {name: '&#xf1f4; &nbsp; Visa', value: 'fab fa-cc-visa'},
-    {name: '&#xf555; &nbsp; Pay Pal', value: 'fab fa-cc-paypal'},
-    {name: '&#xf416; &nbsp; Apple Pay', value: 'fab fa-cc-apple-pay'},
-    {name: '&#xf1f3; &nbsp; Amex', value: 'fab fa-cc-amex'},
-    {name: '&#xf1f2; &nbsp; Discover', value: 'fab fa-cc-discover'},
-    {name: '&#xf42d; &nbsp; Amazon Pay', value: 'fab fa-cc-amazon-pay'}
-  ];
-
-  RECORD_TYPES = [
-    'INCOME',
-    'EXPENSE',
-    'TRANSFER'
-  ];
-
   aSub!: Subscription;
   bSub!: Subscription;
   cSub!: Subscription;
@@ -118,6 +59,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   isNew: boolean = false;
   updateObject!: any;
   closeResult!: string;
+  constants = Constants;
 
   constructor(private accountService: AccountService,
               private accountTypeService: AccountTypeService,
@@ -129,7 +71,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
               private toast: ToastrService,
               private ratesService: RatesService,
               private modalService: NgbModal
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getAllAccounts();
@@ -183,8 +125,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       user => {
         this.user = user;
         this.userForm = new FormGroup({
-          name: new FormControl(this.user?.name?? ''),
-          email: new FormControl(this.user?.email?? '', [Validators.required, Validators.email])
+          name: new FormControl(this.user?.name ?? ''),
+          email: new FormControl(this.user?.email ?? '', [Validators.required, Validators.email])
         });
       },
       error => {
@@ -212,8 +154,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.ratesService.getRates().then(
       (rates) => {
         this.rates = rates;
-         Object.entries(rates.rates).map(rate => {
-           this.currencyList.push(rate[0]);
+        Object.entries(rates.rates).map(rate => {
+          this.currencyList.push(rate[0]);
         });
       });
   }
@@ -222,32 +164,32 @@ export class SettingsComponent implements OnInit, OnDestroy {
     object ? this.isNew = false : this.isNew = true;
     switch (type) {
       case 'accountType':
-        object? this.startFormAccountType(object) : this.startFormAccountType();
+        object ? this.startFormAccountType(object) : this.startFormAccountType();
         break;
       case 'currency':
-        object? this.startFormCurrency(object) : this.startFormCurrency();
+        object ? this.startFormCurrency(object) : this.startFormCurrency();
         break;
       case 'expense':
-        object? this.startFormCategory(true, object) : this.startFormCategory(true);
+        object ? this.startFormCategory(true, object) : this.startFormCategory(true);
         break;
       case 'income':
-        object? this.startFormCategory(false, object) : this.startFormCategory(false);
+        object ? this.startFormCategory(false, object) : this.startFormCategory(false);
         break;
       case 'account':
-        object? this.startFormAccount(object) : this.startFormAccount();
+        object ? this.startFormAccount(object) : this.startFormAccount();
         break;
       case 'template':
-        object? this.startFormTemplate(object) : this.startFormTemplate();
+        object ? this.startFormTemplate(object) : this.startFormTemplate();
         break;
       case 'filter':
-        object? this.startFormFilter(object) : this.startFormFilter();
+        object ? this.startFormFilter(object) : this.startFormFilter();
         break;
     }
-    this.modalService.open(content, { windowClass: 'modal-mini', size: 'sm', centered: true }).result.then((result) => {
-        this.closeResult = 'Closed with: $result';
-      }, (reason: any) => {
-        this.closeResult = 'Dismissed $this.getDismissReason(reason)';
-      });
+    this.modalService.open(content, {windowClass: 'modal-mini', size: 'sm', centered: true}).result.then(() => {
+      this.closeResult = 'Closed with: $result';
+    }, () => {
+      this.closeResult = 'Dismissed $this.getDismissReason(reason)';
+    });
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -287,16 +229,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
     };
     this.formAccountType.disable();
     this.accountTypeService.add(accountType).subscribe(
-      result => {
-          this.toast.success('New Account Type was created.');
-          this.formAccountType.reset();
-          this.formAccountType.enable();
-          this.modalService.dismissAll();
-          this.getAllAccountTypes();
+      () => {
+        this.toast.success('New Account Type was created.');
+        this.formAccountType.reset();
+        this.formAccountType.enable();
+        this.modalService.dismissAll();
+        this.getAllAccountTypes();
       },
       error => {
         this.formAccountType.enable();
-        this.toast.error(error.errors?.message?? 'New Account Type is NOT added! Try again.');
+        this.toast.error(error.errors?.message ?? 'New Account Type is NOT added! Try again.');
       });
   }
 
@@ -305,7 +247,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.negative = this.formAccountType.get('accountTypeIsNegative')?.value;
     this.formAccountType.disable();
     this.accountTypeService.update(this.updateObject).subscribe(
-      value => {
+      () => {
         this.toast.success('Account Type was updated.');
         this.formAccountType.reset();
         this.formAccountType.enable();
@@ -315,7 +257,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formAccountType.enable();
-        this.toast.error(error.errors?.message?? 'Account Type is NOT updated! Try again.')
+        this.toast.error(error.errors?.message ?? 'Account Type is NOT updated! Try again.')
       }
     );
   }
@@ -340,7 +282,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.value && accountType.id) {
         this.accountTypeService.delete(accountType.id).subscribe(
-          value => {
+          () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
               text: accountType.name + ' has been deleted.',
@@ -351,7 +293,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           error => {
             swalWithBootstrapButtons.fire({
               title: 'Error!',
-              text: error.error.message?? accountType.name + ' is NOT deleted! Try again.',
+              text: error.error.message ?? accountType.name + ' is NOT deleted! Try again.',
               icon: 'error'
             }).then();
           }
@@ -400,7 +342,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     };
     this.formCurrency.disable();
     this.currencyService.add(currency).subscribe(
-      result => {
+      () => {
         this.toast.success('New Currency was created.');
         this.formCurrency.reset();
         this.formCurrency.enable();
@@ -409,7 +351,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formCurrency.enable();
-        this.toast.error(error.errors.message?? 'New Currency is NOT added! Try again.')
+        this.toast.error(error.errors.message ?? 'New Currency is NOT added! Try again.')
       });
   }
 
@@ -419,7 +361,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.base = this.formCurrency.get('currencyBase')?.value;
     this.formCurrency.disable();
     this.currencyService.update(this.updateObject).subscribe(
-      value => {
+      () => {
         this.toast.success('Currency was updated.');
         this.formCurrency.reset();
         this.formCurrency.enable();
@@ -429,7 +371,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formCurrency.enable();
-        this.toast.error(error.errors?.message?? 'Currency is NOT updated! Try again.')
+        this.toast.error(error.errors?.message ?? 'Currency is NOT updated! Try again.')
       }
     );
   }
@@ -454,7 +396,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.value && currency.id) {
         this.currencyService.delete(currency.id).subscribe(
-          value => {
+          () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
               text: currency.name + ' has been deleted.',
@@ -465,7 +407,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           error => {
             swalWithBootstrapButtons.fire({
               title: 'Error!',
-              text: error.error?.message?? currency.name + ' is NOT deleted! Try again.',
+              text: error.error?.message ?? currency.name + ' is NOT deleted! Try again.',
               icon: 'error'
             }).then();
           }
@@ -503,7 +445,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.formCategory = new FormGroup({
         categoryName: new FormControl('', [Validators.required]),
         categoryIcon: new FormControl('', [Validators.required]),
-        categoryExpense: new FormControl(expense?? false)
+        categoryExpense: new FormControl(expense ?? false)
       });
     }
   }
@@ -516,7 +458,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     };
     this.formCategory.disable();
     this.categoryService.add(category).subscribe(
-      result => {
+      () => {
         this.toast.success('New Category was created.');
         this.formCategory.reset();
         this.formCategory.enable();
@@ -525,7 +467,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formCategory.enable();
-        this.toast.error(error.errors.message?? 'New Category is NOT added! Try again.')
+        this.toast.error(error.errors.message ?? 'New Category is NOT added! Try again.')
       });
   }
 
@@ -535,7 +477,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.expense = this.formCategory.get('categoryExpense')?.value;
     this.formCategory.disable();
     this.categoryService.update(this.updateObject).subscribe(
-      value => {
+      () => {
         this.toast.success('Category was updated.');
         this.formCategory.reset();
         this.formCategory.enable();
@@ -545,7 +487,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formCategory.enable();
-        this.toast.error(error.errors?.message?? 'Category is NOT updated! Try again.')
+        this.toast.error(error.errors?.message ?? 'Category is NOT updated! Try again.')
       }
     );
   }
@@ -570,7 +512,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.value && category.id) {
         this.categoryService.delete(category.id).subscribe(
-          value => {
+          () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
               text: category.name + ' has been deleted.',
@@ -581,7 +523,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           error => {
             swalWithBootstrapButtons.fire({
               title: 'Error!',
-              text: error.error?.message?? category.name + ' is NOT deleted! Try again.',
+              text: error.error?.message ?? category.name + ' is NOT deleted! Try again.',
               icon: 'error'
             }).then();
           }
@@ -647,7 +589,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     };
     this.formAccount.disable();
     this.accountService.add(account).subscribe(
-      result => {
+      () => {
         this.toast.success('New Account was created.');
         this.formAccount.reset();
         this.formAccount.enable();
@@ -656,7 +598,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formAccount.enable();
-        this.toast.error(error.errors.message?? 'New Account is NOT added! Try again.')
+        this.toast.error(error.errors.message ?? 'New Account is NOT added! Try again.')
       });
   }
 
@@ -672,7 +614,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.creditLimit = this.formAccount.get('accountLimit')?.value;
     this.formAccount.disable();
     this.accountService.update(this.updateObject).subscribe(
-      value => {
+      () => {
         this.toast.success('Account was updated.');
         this.formAccount.reset();
         this.formAccount.enable();
@@ -682,7 +624,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formAccount.enable();
-        this.toast.error(error.errors?.message?? 'Account is NOT updated! Try again.')
+        this.toast.error(error.errors?.message ?? 'Account is NOT updated! Try again.')
       }
     );
   }
@@ -707,7 +649,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.value && account.id) {
         this.accountService.delete(account.id).subscribe(
-          value => {
+          () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
               text: account.name + ' has been deleted.',
@@ -718,7 +660,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           error => {
             swalWithBootstrapButtons.fire({
               title: 'Error!',
-              text: error.error?.message?? account.name + ' is NOT deleted! Try again.',
+              text: error.error?.message ?? account.name + ' is NOT deleted! Try again.',
               icon: 'error'
             }).then();
           }
@@ -750,8 +692,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
         filterStartDate: new FormControl(filter.startDate ? new Date(filter.startDate) : null),
         filterEndDate: new FormControl(filter.endDate ? new Date(filter.endDate) : null),
         filterRecordType: new FormControl(filter.recordType),
-        filterCategories: new FormControl(filter.categories?? []),
-        filterAccounts: new FormControl(filter.accounts?? [])
+        filterCategories: new FormControl(filter.categories ?? []),
+        filterAccounts: new FormControl(filter.accounts ?? [])
       });
     } else {
       this.formFilter = new FormGroup({
@@ -776,7 +718,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     };
     this.formFilter.disable();
     this.filterService.add(filter).subscribe(
-      result => {
+      () => {
         this.toast.success('New Filter was created.');
         this.formFilter.reset();
         this.formFilter.enable();
@@ -785,7 +727,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formFilter.enable();
-        this.toast.error(error.errors.message?? 'New Filter is NOT added! Try again.')
+        this.toast.error(error.errors.message ?? 'New Filter is NOT added! Try again.')
       });
   }
 
@@ -798,7 +740,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.accounts = this.formFilter.get('filterAccounts')?.value;
     this.formFilter.disable();
     this.filterService.update(this.updateObject).subscribe(
-      value => {
+      () => {
         this.toast.success('Filter was updated.');
         this.formFilter.reset();
         this.formFilter.enable();
@@ -808,7 +750,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formFilter.enable();
-        this.toast.error(error.errors?.message?? 'Filter is NOT updated! Try again.')
+        this.toast.error(error.errors?.message ?? 'Filter is NOT updated! Try again.')
       }
     );
   }
@@ -833,7 +775,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.value && filter.id) {
         this.filterService.delete(filter.id).subscribe(
-          value => {
+          () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
               text: filter.name + ' has been deleted.',
@@ -844,7 +786,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           error => {
             swalWithBootstrapButtons.fire({
               title: 'Error!',
-              text: error.error?.message?? filter.name + ' is NOT deleted! Try again.',
+              text: error.error?.message ?? filter.name + ' is NOT deleted! Try again.',
               icon: 'error'
             }).then();
           }
@@ -899,7 +841,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     };
     this.formTemplate.disable();
     this.templateService.add(template).subscribe(
-      result => {
+      () => {
         this.toast.success('New Template was created.');
         this.formTemplate.reset();
         this.formTemplate.enable();
@@ -908,7 +850,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formTemplate.enable();
-        this.toast.error(error.errors.message?? 'New Template is NOT added! Try again.')
+        this.toast.error(error.errors.message ?? 'New Template is NOT added! Try again.')
       });
   }
 
@@ -920,7 +862,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.amount = this.formTemplate.get('templateAmount')?.value;
     this.formTemplate.disable();
     this.templateService.update(this.updateObject).subscribe(
-      value => {
+      () => {
         this.toast.success('Template was updated.');
         this.formTemplate.reset();
         this.formTemplate.enable();
@@ -930,7 +872,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error => {
         this.formTemplate.enable();
-        this.toast.error(error.errors?.message?? 'Template is NOT updated! Try again.')
+        this.toast.error(error.errors?.message ?? 'Template is NOT updated! Try again.')
       }
     );
   }
@@ -955,7 +897,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.value && template.id) {
         this.templateService.delete(template.id).subscribe(
-          value => {
+          () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
               text: template.name + ' has been deleted.',
@@ -966,7 +908,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           error => {
             swalWithBootstrapButtons.fire({
               title: 'Error!',
-              text: error.error?.message?? template.name + ' is NOT deleted! Try again.',
+              text: error.error?.message ?? template.name + ' is NOT deleted! Try again.',
               icon: 'error'
             }).then();
           }

@@ -53,7 +53,7 @@
     </div>
   </div>
 </nav>
-<div *ngIf="sidenavOpen === true" class="backdrop d-xl-none" (click)="toggleSidenav()">FFFFFFF</div>
+<div *ngIf="sidenavOpen === true" class="backdrop d-xl-none" (click)="toggleSidenav()"></div>
 
 <!--      Modal Record    -->
 <ng-template #recordModal let-c="close" let-d="dismiss">
@@ -62,80 +62,101 @@
       <div class="card bg-secondary shadow border-0 mb-0">
         <div class="card-header bg-white pb-0">
           <div class="text-muted text-center mb-3">
-            <h3>Add Record</h3>
+            <h3>Add Account</h3>
           </div>
         </div>
         <div class="card-body px-lg-5 py-lg-2">
           <form [formGroup]="formRecord" (ngSubmit)="addRecord()">
-
-
-
-<!--            &lt;!&ndash;      Name      &ndash;&gt;-->
-<!--            <div class="form-group mb-3">-->
-<!--              <div class="input-group input-group-alternative">-->
-<!--                <div class="input-group-prepend">-->
-<!--                  <span class="input-group-text"><i class="ni ni-tag"></i></span>-->
-<!--                </div>-->
-<!--                <input formControlName="templateName" class="form-control" placeholder="Name" type="text">-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;      Category      &ndash;&gt;-->
-<!--            <div class="form-group">-->
-<!--              <div class="input-group input-group-alternative">-->
-<!--                <div class="input-group-prepend">-->
-<!--                  <span class="input-group-text"><i class="fas fa-sitemap"></i></span>-->
-<!--                </div>-->
-<!--                <select formControlName="templateCategory" class="form-control" [compareWith]="compareById">-->
-<!--                  <option value="null" disabled selected hidden>Select Category</option>-->
-<!--                  <option *ngFor="let category of categories" [ngValue]="category">{{category.name}}</option>-->
-<!--                </select>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;      Account      &ndash;&gt;-->
-<!--            <div class="form-group">-->
-<!--              <div class="input-group input-group-alternative">-->
-<!--                <div class="input-group-prepend">-->
-<!--                  <span class="input-group-text"><i class="fas fa-university"></i></span>-->
-<!--                </div>-->
-<!--                <select formControlName="templateAccount" class="form-control" [compareWith]="compareById">-->
-<!--                  <option value="null" disabled selected hidden>Select Account</option>-->
-<!--                  <option *ngFor="let account of accounts" [ngValue]="account">{{account.name}}</option>-->
-<!--                </select>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;      Record Type      &ndash;&gt;-->
-<!--            <div class="form-group">-->
-<!--              <div class="input-group input-group-alternative">-->
-<!--                <div class="input-group-prepend">-->
-<!--                  <span class="input-group-text"><i class="fas fa-exchange-alt"></i></span>-->
-<!--                </div>-->
-<!--                <select formControlName="templateRecordType" class="form-control">-->
-<!--                  <option value="null" disabled selected hidden>Select Record Type</option>-->
-<!--                  <option *ngFor="let recordType of RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>-->
-<!--                </select>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;      Amount      &ndash;&gt;-->
-<!--            <div class="form-group mb-3">-->
-<!--              <div class="input-group input-group-alternative">-->
-<!--                <div class="input-group-prepend">-->
-<!--                  <span class="input-group-text"><i class="fas fa-calculator"></i></span>-->
-<!--                </div>-->
-<!--                <input formControlName="templateAmount" class="form-control" placeholder="Amount" type="number">-->
-<!--              </div>-->
-<!--            </div>-->
-
-
-
-
-            <!--      Buttons      -->
+            <!--  Record Type  -->
+            <div class="form-group mb-3">
+              <div class="row">
+                <div class="col-6">
+                  <div class="custom-control custom-radio mb-3">
+                    <input type="radio" id="income" name="recordType" formControlName="recordType" class="custom-control-input" value="INCOME">
+                    <label class="custom-control-label" for="income">Income</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="custom-control custom-radio">
+                    <input type="radio" id="expense" name="recordType" formControlName="recordType" class="custom-control-input" value="EXPENSE">
+                    <label class="custom-control-label" for="expense">Expense</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--     Amount / Date     -->
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="form-group mb-2">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-calculator"></i></span>
+                    </div>
+                    <input formControlName="recordAmount" class="form-control" placeholder="0.00" type="number"
+                           min="0.00" step="0.01">
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group mb-2">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                    </div>
+                    <input type="text"
+                           placeholder="Set Date"
+                           class="form-control"
+                           bsDatepicker
+                           formControlName="recordDate"
+                           [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--      Category      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-sitemap"></i></span>
+                </div>
+                <select formControlName="recordCategory" class="form-control" [compareWith]="compareById">
+                  <option value="null" disabled selected hidden>Select Category</option>
+                  <option *ngFor="let category of categories" [ngValue]="category">{{category.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--      Account      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-university"></i></span>
+                </div>
+                <select formControlName="recordAccount" class="form-control" [compareWith]="compareById">
+                  <option value="null" disabled selected hidden>Select Account</option>
+                  <option *ngFor="let account of accounts" [ngValue]="account">{{account.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--      Comment      -->
+            <label class="form-control-label" for="rec_comment">Comment</label>
+            <div class="form-group mb-2">
+              <div class="input-group input-group-alternative">
+                <textarea class="form-control" id="rec_comment" rows="3" formControlName="recordComment"></textarea>
+              </div>
+            </div>
+            <!--  Buttons  -->
             <div class="d-flex justify-content-between my-4">
-              <button type="submit" class="btn btn-success" [disabled]="formRecord.invalid || formRecord.disabled">Add</button>
-              <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">Dismiss</button>
+              <button type="submit" class="btn btn-success" [disabled]="formRecord.invalid || formRecord.disabled">
+                Add
+              </button>
+              <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">
+                Dismiss
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+
 </ng-template>

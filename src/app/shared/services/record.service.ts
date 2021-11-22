@@ -3,11 +3,12 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Record} from "../models/Record";
 import {AuthService} from "./auth.service";
+import {RecordSearchValues} from "../search/RecordSearchValues";
 
 @Injectable({
   providedIn: 'root'
 })
-export class RecordService{
+export class RecordService {
   userId: number = 0;
 
   constructor(private http: HttpClient,
@@ -22,7 +23,7 @@ export class RecordService{
     return this.http.post<any>('/api/record/all', this.userId);
   }
 
-  add(record: Record): Observable<any>{
+  add(record: Record): Observable<any> {
     record.userId = this.userId;
     return this.http.post<any>('/api/record/add', record);
   }
@@ -33,5 +34,9 @@ export class RecordService{
 
   update(record: Record) {
     return this.http.patch<any>('/api/record/update', record);
+  }
+
+  search(searchValues: RecordSearchValues) {
+    return this.http.post<any>('api/record/search', searchValues);
   }
 }

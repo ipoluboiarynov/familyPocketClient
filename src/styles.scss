@@ -83,11 +83,10 @@ $text_light: #8F96A9;
 }
 
 .records-th {
-  padding-top: .25em!important;
-  padding-bottom: .25em!important;
+  padding-top: .75em!important;
+  padding-bottom: .75em!important;
   border: none;
-  display: flex;
-  align-items: center;
+  background-color: white;
 }
 
 .brand-name {
@@ -115,4 +114,17 @@ $text_light: #8F96A9;
   cursor: pointer;
 }
 
+.record-date {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.fit {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.pointer {
+  cursor: pointer;
+}
 

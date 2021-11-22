@@ -1,13 +1,14 @@
-import {Component, OnInit, ElementRef, ViewChild} from "@angular/core";
-import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
+import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {Event, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
 import {AuthService} from "../../../shared/services/auth.service";
 import {ToastrService} from "ngx-toastr";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AccountType} from "../../../shared/models/AccountType";
-import Swal from "sweetalert2";
 import {RecordService} from "../../../shared/services/record.service";
 import {Record} from "../../../shared/models/Record";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AccountService} from "../../../shared/services/account.service";
+import {CategoryService} from "../../../shared/services/category.service";
+import {Account} from "../../../shared/models/Account";
 
 @Component({
   selector: "app-navbar",
@@ -20,12 +21,16 @@ export class NavbarComponent implements OnInit {
   isNew!: boolean;
   formRecord!: FormGroup;
   closeResult!: string;
+  accounts: Account[] = [];
+  categories: Account[] = [];
 
   constructor(
     private router: Router,
     private auth: AuthService,
     private toast: ToastrService,
     private recordService: RecordService,
+    private accountService: AccountService,
+    private categoryService: CategoryService,
     private modalService: NgbModal
   ) {
     this.router.events.subscribe((event: Event) => {
@@ -53,6 +58,8 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAllAccounts();
+    this.getAllCategories();
   }
   toggleSidenav() {
     if (document.body.classList.contains("g-sidenav-pinned")) {
@@ -82,6 +89,37 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  compareById(v1: any, v2: any) {
+    return v1?.id === v2?.id;
+  }
+
+  getAllCategories() {
+    this.categoryService.getAll().subscribe(
+      categories => {
+        this.categories = categories;
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Categories are not downloaded.');
+      }
+    );
+  }
+
+  getAllAccounts() {
+    this.accountService.getAll().subscribe(
+      accounts => {
+        this.accounts = accounts;
+      },
+      error => {
+        this.toast.error(error.error.message ?? 'Accounts are not downloaded.');
+      }
+    );
+  }
+
+  convertDateToString(date: Date): string {
+    date.setDate(date.getDate() + 1);
+    return date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
+  }
+
   /////////////////////////////////////////////////////////////////////////////
   //                            Record Operations                            //
   /////////////////////////////////////////////////////////////////////////////
@@ -90,22 +128,21 @@ export class NavbarComponent implements OnInit {
     this.formRecord = new FormGroup({
       recordType: new FormControl(null, [Validators.required]),
       recordAmount: new FormControl(null, [Validators.required]),
-      recordCurrency: new FormControl(null, [Validators.required]),
       recordAccount: new FormControl(null, [Validators.required]),
       recordCategory: new FormControl(null, [Validators.required]),
-      recordDate: new FormControl(null, [Validators.required]),
+      recordDate: new FormControl(new Date(), [Validators.required]),
       recordComment: new FormControl(null, [Validators.maxLength(100)])
     });
   }
 
   addRecord() {
     let record: Record = {
-      type: this.formRecord.get('recordType')?.value,
+      recordType: this.formRecord.get('recordType')?.value,
       amount: this.formRecord.get('recordAmount')?.value,
-      currencyId: this.formRecord.get('recordCurrency')?.value,
-      accountId: this.formRecord.get('recordAccount')?.value,
-      categoryId: this.formRecord.get('recordCategory')?.value,
-      date: this.formRecord.get('recordDate')?.value,
+      account: this.formRecord.get('recordAccount')?.value,
+      category: this.formRecord.get('recordCategory')?.value,
+      recordDate: this.formRecord.get('recordDate')?.value ? this.convertDateToString(this.formRecord.get('recordDate')?.value) :
+        this.convertDateToString(new Date()),
       comment: this.formRecord.get('recordComment')?.value
 
     };
@@ -116,6 +153,7 @@ export class NavbarComponent implements OnInit {
         this.formRecord.reset();
         this.formRecord.enable();
         this.modalService.dismissAll();
+        window.location.reload();
       },
       error => {
         this.formRecord.enable();

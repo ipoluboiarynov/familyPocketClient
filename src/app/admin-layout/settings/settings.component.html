@@ -557,7 +557,7 @@
                 </div>
                 <select formControlName="currencyIcon" class="form-control fontawesome-icons">
                   <option value="" disabled selected hidden>Select Icon</option>
-                  <option *ngFor="let currencyIcon of CURRENCY_ICONS" [ngValue]="currencyIcon.value" [innerHTML]="currencyIcon.name"></option>
+                  <option *ngFor="let currencyIcon of constants.CURRENCY_ICONS" [ngValue]="currencyIcon.value" [innerHTML]="currencyIcon.name"></option>
                 </select>
               </div>
             </div>
@@ -608,7 +608,7 @@
                 </div>
                 <select formControlName="categoryIcon" class="form-control fontawesome-icons">
                   <option value="" disabled selected hidden>Select Icon</option>
-                  <option *ngFor="let categoryIcon of CATEGORY_ICONS" [ngValue]="categoryIcon.value" [innerHTML]="categoryIcon.name"></option>
+                  <option *ngFor="let categoryIcon of constants.CATEGORY_ICONS" [ngValue]="categoryIcon.value" [innerHTML]="categoryIcon.name"></option>
                 </select>
               </div>
             </div>
@@ -659,7 +659,7 @@
                 </div>
                 <select formControlName="accountIcon" class="form-control fontawesome-icons">
                   <option value="null" disabled selected hidden>Select Icon</option>
-                  <option *ngFor="let accountIcon of ACCOUNT_ICONS" [ngValue]="accountIcon.value" [innerHTML]="accountIcon.name"></option>
+                  <option *ngFor="let accountIcon of constants.ACCOUNT_ICONS" [ngValue]="accountIcon.value" [innerHTML]="accountIcon.name"></option>
                 </select>
               </div>
             </div>
@@ -820,7 +820,7 @@
                 </div>
                 <select formControlName="filterRecordType" class="form-control">
                   <option value="null" disabled selected hidden>Select Record Type</option>
-                  <option *ngFor="let recordType of RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
+                  <option *ngFor="let recordType of constants.RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
                 </select>
               </div>
             </div>
@@ -913,7 +913,7 @@
                 </div>
                 <select formControlName="templateRecordType" class="form-control">
                   <option value="null" disabled selected hidden>Select Record Type</option>
-                  <option *ngFor="let recordType of RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
+                  <option *ngFor="let recordType of constants.RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
                 </select>
               </div>
             </div>

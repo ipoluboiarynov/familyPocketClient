@@ -1,111 +1,240 @@
 <div class="container-fluid">
   <!--  Header  -->
-      <div class="card card-frame mt-3">
-        <div class="card-body p-2 d-flex justify-content-between">
-          <!--    Select All      -->
-          <div class="d-flex align-items-center ml-2">
-            <div class=" custom-control custom-checkbox">
-              <input class=" custom-control-input" type="checkbox" id="table-check-all">
-              <label class=" custom-control-label text-muted" for="table-check-all"><span class="d-none d-md-inline text-nowrap">Select All</span></label>
+  <div class="card card-frame mt-3">
+    <div class="card-body p-2 d-flex justify-content-between">
+      <!--    Filter Date     -->
+      <div class="d-flex align-items-center">
+        <div class="row m-0 p-0">
+          <div class="col-12 col-lg-6 d-flex align-items-center p-0">
+            <div class="d-flex align-items-center p-0">
+              <label for="date-range" class="d-flex text-muted m-0"><i class="ni ni-calendar-grid-58 mr-2"></i></label>
+              <input type="text"
+                     id="date-range"
+                     placeholder="00/00/0000 - 00/00/0000"
+                     class="form-control form-control-sm"
+                     bsDaterangepicker
+                     [(bsValue)]="dateRange"
+                     (bsValueChange)="generateDateFromRange($event)"
+                     [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
             </div>
           </div>
-          <!--    Date Filter      -->
-          <div class="row d-flex align-items-center">
-            <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center p-0">
-              <div class="row">
-                <div class="col-12 col-sm-6 d-flex align-items-center p-0">
-                  <label for="start-date" class="d-flex text-muted m-0"><i class="ni ni-calendar-grid-58 mr-2"></i></label>
-                  <input class="form-control form-control-sm" type="date" value="2018-11-23" id="start-date">
-                </div>
-                <div class="col-12 col-sm-6 d-flex align-items-center p-0">
-                  <label for="end-date" class="form-control-label mx-1">-</label>
-                  <input class="form-control form-control-sm" type="date" value="2018-11-23" id="end-date">
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center p-0">
-              <ul class="d-flex list-unstyled align-items-center mb-0 ml-2">
-                <li><a href="">Today</a><span class="px-1"> | </span></li>
-                <li><a href="">7 days</a><span class="px-1"> | </span></li>
-                <li><a href="">30 days</a><span class="px-1"> | </span></li>
-                <li><a href="">All</a></li>
-              </ul>
-            </div>
-
-          </div>
-          <!--    Sort By      -->
-          <div class="d-flex align-items-center">
-            <div class="d-flex align-items-center">
-              <label for="sort" class="m-0 mr-2 text-nowrap text-muted"><span class="d-none d-lg-inline">Sort by</span></label>
-              <select class="form-control form-control-sm" id="sort">
-                <option>Small select</option>
-              </select>
-            </div>
+          <div class="col-12 col-lg-6 d-flex align-items-center p-0">
+            <ul class="d-flex list-unstyled align-items-center mb-0 ml-2">
+              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="generateDateFromDays(1)">Today</button></li>
+              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="generateDateFromDays(7)">7 days</button></li>
+              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="generateDateFromDays(30)">30 days</button></li>
+              <i *ngIf="dateRange" class="fas fa-times-circle d-inline text-danger ml-2 pointer" (click)="resetDateRange()"></i>
+            </ul>
           </div>
         </div>
       </div>
+      <!--    Filter Category / Account     -->
+      <div class="d-flex align-items-center">
+        <!--   Category     -->
+        <div class="btn-group dropdown" dropdown>
+          <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" dropdownToggle data-bs-auto-close="inside">
+            Categories{{!filter?.categories ? ' (all)' : (filter.categories?.length == 0) ? ' (all)' : ' (' + filter.categories?.length + ')'}}
+          </button>
+          <div *dropdownMenu class="dropdown-menu dropdown-menu-right" (click)=dontCloseOnClick($event)>
+            <ul class="list-unstyled mb-0">
+              <li class="d-flex justify-content-around align-items-center">
+                <button class="btn btn-sm btn-link" (click)="checkboxToggle(true, 'category')" id="categories-check">check all</button>
+                <button class="btn btn-sm btn-link" (click)="checkboxToggle(false, 'category')" id="categories-uncheck">uncheck</button>
+              </li>
+              <li class="dropdown-item" *ngFor="let category of categories">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" #categoryChecks [id]="'check-category-' + category.id"
+                         [checked]="filter?.categories?.includes(category)">
+                  <label class="custom-control-label" [for]="'check-category-' + category.id">{{category.name}}</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!--   Account     -->
+        <div class="btn-group dropdown" dropdown>
+          <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" dropdownToggle data-bs-auto-close="inside">
+            Accounts{{!filter?.accounts ? ' (all)' : (filter.accounts?.length == 0) ? ' (all)' : ' (' + filter.accounts?.length + ')'}}
+          </button>
+          <div *dropdownMenu class="dropdown-menu dropdown-menu-right" (click)=dontCloseOnClick($event)>
+            <ul class="list-unstyled mb-0">
+              <li class="d-flex justify-content-around align-items-center">
+                <button class="btn btn-sm btn-link" (click)="checkboxToggle(true, 'account')" id="accounts-check">check all</button>
+                <button class="btn btn-sm btn-link" (click)="checkboxToggle(false, 'account')" id="accounts-uncheck">uncheck</button>
+              </li>
+              <li class="dropdown-item" *ngFor="let account of accounts">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" #accountChecks [id]="'check-account-' + account.id"
+                         [checked]="filter?.accounts?.includes(account)">
+                  <label class="custom-control-label" [for]="'check-account-' + account.id">{{account.name}}</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <!--  Table Records  -->
   <div class=" table-responsive">
     <table class=" table align-items-center table-flush">
       <thead class=" thead-light">
       </thead>
       <tbody class=" list">
-
-
-        <tr *ngFor="let record of records; let i = index;">
-          <h5 class="text-left mt-3 mb-2">
-            September 10
-          </h5>
-          <div class="card card-frame mb-2">
-            <div class="card-body d-flex p-0">
-              <th class="records-th">
-                <div class=" custom-control custom-checkbox">
-                  <input class=" custom-control-input" type="checkbox" [id]="i">
-                  <label class=" custom-control-label" [for]="i"></label>
-                </div>
-              </th>
-              <td class="records-th">
-                <div class=" media align-items-center">
-                  <a class=" avatar rounded-circle mr-3" href="javascript:void(0)">
-                    <img alt="Image placeholder" src="assets/img/theme/bootstrap.jpg">
-                  </a>
-                  <div class=" media-body">
-                    <span class=" name mb-0 text-sm">Wells Fargo</span>
-                  </div>
-                </div>
-              </td>
-              <td class="records-th">
-                <div class=" media align-items-center">
-                  <div class="fp-icon"></div>
-                  <div class=" media-body">
-                    <span class=" name mb-0 text-sm">Category 1</span>
-                  </div>
-                </div>
-              </td>
-              <td class="records-th">
-                <div class=" d-flex align-items-center">
-                  <span class="text-muted mr-2">Comments</span>
-                </div>
-              </td>
-              <td class="budget records-th ml-auto">$2500 USD</td>
-              <td class="text-right records-th">
-                <div dropdown class="dropdown no-caret" [dropup]="true">
-                  <a id="button-dropup" dropdownToggle role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle"
-                     aria-controls="dropdown-dropup">
-                    <i class=" fas fa-ellipsis-v"> </i>
-                  </a>
-
-                  <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" *dropdownMenu>
-                    <a href="javascript:void(0)" class="dropdown-item">Edit</a>
-                    <a href="javascript:void(0)" class="dropdown-item">Delete</a>
-                  </div>
-                </div>
-              </td>
+      <tr *ngFor="let record of records; let i = index;" [id]="'row-' + i" class="color-box">
+        <td class="records-th fit">
+          <div class=" d-flex align-items-center">
+            <span class="text-muted mr-2 d-none d-md-inline">{{record.recordDate | date: 'MMMM dd'}}</span>
+            <span class="text-muted mr-2 d-md-none">{{record.recordDate | date: 'MM-dd'}}</span>
+          </div>
+        </td>
+        <td class="records-th">
+          <div class=" media align-items-center">
+            <div class="avatar rounded-circle mr-3 {{record.recordType === 'INCOME' ? 'bg-success' : 'bg-danger'}}">
+              <i class="{{record.category.icon}}"></i>
+            </div>
+            <div class=" media-body">
+              <span class=" name mb-0 text-sm">{{record.category.name}}</span>
             </div>
           </div>
-        </tr>
+        </td>
+        <td class="records-th">
+          <div class=" d-flex align-items-center">
+            <span class="text-muted mr-2">{{record.comment}}</span>
+          </div>
+        </td>
+        <td class="records-th">
+          <div class=" media align-items-center">
+            <div class="avatar rounded-circle mr-3" [style.background-color]="record.account.color ?? ''">
+              <i class="{{record.account.icon}}"></i>
+            </div>
+            <div class=" media-body">
+              <span class=" name mb-0 text-sm">{{record.account.name}}</span>
+            </div>
+          </div>
+        </td>
+        <td
+          class="budget records-th text-right font-weight-bold {{record.recordType === 'EXPENSE' ? 'text-danger' : 'text-success'}}">
+          {{record.recordType === 'EXPENSE' ? '-' : '+'}}{{record.amount}} {{record.account.currency.name}}
+        </td>
+        <td class="text-right records-th fit">
+          <div class="mr-1 dropdown no-caret" dropdown [dropup]="i!=0">
+            <button role="button" class="btn btn-sm btn-icon-only text-light dropdown-toggle" type="button" dropdownToggle>
+              <i class=" fas fa-ellipsis-v"> </i>
+            </button>
+
+            <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+              <a href="javascript:void(0)" class="dropdown-item" (click)="open(recordModal, record)">Edit</a>
+              <a href="javascript:void(0)" class="dropdown-item" (click)="deleteRecord(record)">Delete</a>
+            </div>
+          </div>
+        </td>
       </tbody>
     </table>
   </div>
 </div>
+<!--      Modal Record    -->
+<ng-template #recordModal let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card bg-secondary shadow border-0 mb-0">
+        <div class="card-header bg-white pb-0">
+          <div class="text-muted text-center mb-3">
+            <h3>Edit Account</h3>
+          </div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-2">
+          <form [formGroup]="formRecord" (ngSubmit)="updateRecord()">
+            <!--  Record Type  -->
+            <div class="form-group mb-3">
+              <div class="row">
+                <div class="col-6">
+                  <div class="custom-control custom-radio mb-3">
+                    <input type="radio" id="income" name="recordType" formControlName="recordType" class="custom-control-input" value="INCOME">
+                    <label class="custom-control-label" for="income">Income</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="custom-control custom-radio">
+                    <input type="radio" id="expense" name="recordType" formControlName="recordType" class="custom-control-input" value="EXPENSE">
+                    <label class="custom-control-label" for="expense">Expense</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--     Amount / Date     -->
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="form-group mb-2">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-calculator"></i></span>
+                    </div>
+                    <input formControlName="recordAmount" class="form-control" placeholder="0.00" type="number"
+                           min="0.00" step="0.01">
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group mb-2">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                    </div>
+                    <input type="text"
+                           placeholder="Set Date"
+                           class="form-control"
+                           bsDatepicker
+                           formControlName="recordDate"
+                           [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--      Category      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-sitemap"></i></span>
+                </div>
+                <select formControlName="recordCategory" class="form-control" [compareWith]="compareById">
+                  <option value="null" disabled selected hidden>Select Category</option>
+                  <option *ngFor="let category of categories" [ngValue]="category">{{category.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--      Account      -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-university"></i></span>
+                </div>
+                <select formControlName="recordAccount" class="form-control" [compareWith]="compareById">
+                  <option value="null" disabled selected hidden>Select Account</option>
+                  <option *ngFor="let account of accounts" [ngValue]="account">{{account.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--      Comment      -->
+            <label class="form-control-label" for="rec_comment">Comment</label>
+            <div class="form-group mb-2">
+              <div class="input-group input-group-alternative">
+                <textarea class="form-control" id="rec_comment" rows="3" formControlName="recordComment"></textarea>
+              </div>
+            </div>
+            <!--  Buttons  -->
+            <div class="d-flex justify-content-between my-4">
+              <button type="submit" class="btn btn-success" [disabled]="formRecord.invalid || formRecord.disabled">
+                Edit
+              </button>
+              <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">
+                Dismiss
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
