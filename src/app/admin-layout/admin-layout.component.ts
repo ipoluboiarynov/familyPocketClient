@@ -1,4 +1,5 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import {Component, OnInit, HostListener, Input} from "@angular/core";
+import {Account} from "../shared/models/Account";
 
 @Component({
   selector: "app-admin-layout",
@@ -6,6 +7,8 @@ import { Component, OnInit, HostListener } from "@angular/core";
 })
 export class AdminLayoutComponent implements OnInit {
   isMobileResolution: boolean = false;
+
+  accounts_admin: Account[] = [];
 
   constructor() {
     if (window.innerWidth < 1200) {
@@ -22,6 +25,7 @@ export class AdminLayoutComponent implements OnInit {
       this.isMobileResolution = false;
     }
   }
-  ngOnInit() {}
+  ngOnInit() {
+  }
 }
 

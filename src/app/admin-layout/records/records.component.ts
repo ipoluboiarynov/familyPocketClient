@@ -1,4 +1,13 @@
-import {AfterContentChecked, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  AfterContentChecked,
+  Component,
+  ElementRef, EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import {Record} from "../../shared/models/Record";
 import {RecordService} from "../../shared/services/record.service";
 import {DatePipe} from '@angular/common';
@@ -59,39 +68,6 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
       this.aSub.unsubscribe();
     }
   }
-
-  // addDateLabels() {
-  //   let rows = document.querySelectorAll(('[id^="row-"]'));
-  //   let date_rows = document.querySelectorAll(('[id^="date-index-"]'));
-  //   if (rows && rows.length > 0) {
-  //     if (!this.pageLoaded) {
-  //       if (date_rows && date_rows.length > 0) {
-  //         date_rows.forEach(element => {
-  //           element.parentNode?.removeChild(element);
-  //         });
-  //       }
-  //
-  //       this.records.forEach((record, index) => {
-  //         if (index === 0 || (index > 0 && record.recordDate !== this.records[index - 1].recordDate)) {
-  //           let tr = document.createElement('tr');
-  //           tr.setAttribute('id', 'date-index-' + index)
-  //           let td = document.createElement('td');
-  //           td.setAttribute('colspan', '6');
-  //
-  //           let h5 = document.createElement('h5');
-  //           let date = this.datePipe.transform(record.recordDate, 'MMMM dd');
-  //           h5.innerText = date ?? '';
-  //           h5.classList.add('record-date');
-  //
-  //           td.append(h5);
-  //           tr.append(td);
-  //           rows.item(index).parentNode?.insertBefore(tr, rows.item(index));
-  //         }
-  //       });
-  //     }
-  //     this.pageLoaded = true;
-  //   }
-  // }
 
   open(content: any, record: object) {
     this.startFormRecord(record);

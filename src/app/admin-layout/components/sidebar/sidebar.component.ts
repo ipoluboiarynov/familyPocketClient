@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {Category} from "../../../shared/models/Category";
+import {Account} from "../../../shared/models/Account";
 
 let misc: any = {
   sidebar_mini_active: true
