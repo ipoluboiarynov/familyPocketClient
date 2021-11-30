@@ -37,6 +37,15 @@ export class RecordService {
   }
 
   search(searchValues: RecordSearchValues) {
-    return this.http.post<any>('api/record/search', searchValues);
+    return this.http.post<any>('/api/record/search', searchValues);
+  }
+  getTotalNumber() {
+    return this.http.post<any>('/api/record/total', this.userId);
+  }
+
+  addTransfer(from: Record, to: Record) {
+    from.userId = this.userId;
+    to.userId = this.userId;
+    return this.http.post<any>('/api/record/transfer/add', [from, to]);
   }
 }

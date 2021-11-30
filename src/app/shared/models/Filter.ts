@@ -5,8 +5,8 @@ export interface Filter {
   id?: number,
   name: string,
   startDate?: string,
-  endDate?: string,
-  recordType?: string,
+  endDate?: string | null,
+  recordType?: string | null,
   userId?: number,
   accounts?: Account[],
   categories?: Category[]

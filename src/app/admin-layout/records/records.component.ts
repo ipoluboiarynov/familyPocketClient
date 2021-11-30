@@ -1,13 +1,4 @@
-import {
-  AfterContentChecked,
-  Component,
-  ElementRef, EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Record} from "../../shared/models/Record";
 import {RecordService} from "../../shared/services/record.service";
 import {DatePipe} from '@angular/common';
@@ -23,24 +14,35 @@ import {AccountService} from "../../shared/services/account.service";
 import {Filter} from "../../shared/models/Filter";
 import {PageParams} from "../../shared/search/PageParams";
 import {RecordSearchValues} from "../../shared/search/RecordSearchValues";
+import {SharedService} from "../../shared/services/shared.service";
+import {EmitData} from "../../shared/models/EmitData";
+import {ConvertDateService} from "../../shared/services/convertDate.service";
+import {TemplateService} from "../../shared/services/template.service";
 
 @Component({
   selector: 'app-records',
   templateUrl: './records.component.html'
 })
-export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy {
+export class RecordsComponent implements OnInit, OnDestroy {
 
   records: Record[] = [];
   accounts: Account[] = [];
   categories: Category[] = [];
   pageLoaded: boolean = false;
   formRecord!: FormGroup;
-  aSub!: Subscription;
   updateObject?: any;
   closeResult!: string;
   filter!: Filter;
   dateRange: (Date | undefined)[] | undefined;
   pageParams: PageParams = {pageNumber: 0, pageSize: 100};
+  emitRecords: EmitData = {source: 'records', content: null};
+
+  aSub!: Subscription;
+  bSub!: Subscription;
+  cSub!: Subscription;
+  dSub!: Subscription;
+  eSub!: Subscription;
+  fSub!: Subscription;
 
   @ViewChildren("accountChecks") accountChecks!: QueryList<ElementRef>;
   @ViewChildren("categoryChecks") categoryChecks!: QueryList<ElementRef>;
@@ -48,25 +50,49 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
   constructor(private recordService: RecordService,
               private categoryService: CategoryService,
               private accountService: AccountService,
+              private templateService: TemplateService,
               private datePipe: DatePipe,
               private toast: ToastrService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private sharedService: SharedService,
+              private convertDateService: ConvertDateService
+              ) {
+    sharedService.changeEmitted$.subscribe(result => {
+      if (!result.source) {
+        return
+      }
+      if (result.content && result.content === 'onInit') {
+        this.ngOnInit();
+      }
+      // From Sidebar Page
+      if (result.source === 'sidebar') {
+        if (result.content?.name == 'filter') {
+          this.filter = result.content.body;
+          if (this.filter.startDate) {
+            this.dateRange = this.convertDateService.convertStringToRange(this.filter.startDate, this.filter.endDate ?? null);
+          } else {
+            delete this.dateRange;
+            this.filterRecords(this.filter);
+          }
+        }
+      }
+    });
   }
 
   ngOnInit(): void {
     this.filterRecords();
     this.getAllCategories();
     this.getAllAccounts();
-  }
-
-  ngAfterContentChecked() {
-    // this.addDateLabels();
+    this.sharedService.emitChange(this.emitRecords);
   }
 
   ngOnDestroy() {
-    if (this.aSub) {
-      this.aSub.unsubscribe();
-    }
+    this.aSub ? this.aSub.unsubscribe() : '';
+    this.bSub ? this.bSub.unsubscribe() : '';
+    this.cSub ? this.cSub.unsubscribe() : '';
+    this.dSub ? this.dSub.unsubscribe() : '';
+    this.eSub ? this.eSub.unsubscribe() : '';
+    this.fSub ? this.fSub.unsubscribe() : '';
   }
 
   open(content: any, record: object) {
@@ -82,10 +108,16 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
     return v1?.id === v2?.id;
   }
 
+  emitChanges(name: string, body: any) {
+    this.emitRecords.content = {name, body};
+    this.sharedService.emitChange(this.emitRecords);
+  }
+
   getAllCategories() {
-    this.categoryService.getAll().subscribe(
+    this.aSub = this.categoryService.getAll().subscribe(
       categories => {
         this.categories = categories;
+        this.emitChanges('categories', categories);
       },
       error => {
         this.toast.error(error.error.message ?? 'Categories are not downloaded.');
@@ -94,19 +126,15 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
   }
 
   getAllAccounts() {
-    this.accountService.getAll().subscribe(
+    this.bSub = this.accountService.getAll().subscribe(
       accounts => {
         this.accounts = accounts;
+        this.emitChanges('accounts', accounts);
       },
       error => {
         this.toast.error(error.error.message ?? 'Accounts are not downloaded.');
       }
     );
-  }
-
-  convertDateToString(date: Date): string {
-    date.setDate(date.getDate() + 1);
-    return date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -120,14 +148,15 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
     } else {
       filterToSend = filter;
     }
+    this.emitChanges('filter', filterToSend);
     let searchValues: RecordSearchValues = {filter: filterToSend, pageParams: pageParams ?? this.pageParams};
-    this.recordService.search(searchValues).subscribe(
+    this.cSub = this.recordService.search(searchValues).subscribe(
       pageOfRecords => {
         this.records = pageOfRecords.content;
         this.pageLoaded = false;
       },
       error => {
-        this.toast.error(error.error.message ?? 'Records are not downloaded.');
+        this.toast.error('Records are not downloaded. ' + error.statusText ?? '');
       }
     );
   }
@@ -145,15 +174,16 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
   }
 
   updateRecord() {
+    if (!this.formRecord.get('recordCategory')?.value) { return; }
     this.updateObject.recordType = this.formRecord.get('recordType')?.value;
     this.updateObject.amount = this.formRecord.get('recordAmount')?.value;
     this.updateObject.account = this.formRecord.get('recordAccount')?.value;
-    this.updateObject.recordDate = this.formRecord.get('recordDate')?.value ? this.convertDateToString(this.formRecord.get('recordDate')?.value) :
-      this.convertDateToString(new Date());
+    this.updateObject.recordDate = this.formRecord.get('recordDate')?.value ? this.convertDateService.convertDateToString(this.formRecord.get('recordDate')?.value) :
+      this.convertDateService.convertDateToString(new Date());
     this.updateObject.category = this.formRecord.get('recordCategory')?.value;
     this.updateObject.comment = this.formRecord.get('recordComment')?.value;
     this.formRecord.disable();
-    this.recordService.update(this.updateObject).subscribe(
+    this.dSub = this.recordService.update(this.updateObject).subscribe(
       () => {
         this.toast.success('Record was updated.');
         this.formRecord.reset();
@@ -171,7 +201,6 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
   }
 
   deleteRecord(record: Record) {
-
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         cancelButton: 'btn btn-success',
@@ -179,7 +208,6 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
       },
       buttonsStyling: false
     })
-
     swalWithBootstrapButtons.fire({
       title: 'Are you sure?',
       text: "Delete record with amount of " + record.amount + "?",
@@ -189,7 +217,7 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value && record.id) {
-        this.recordService.delete(record.id).subscribe(
+        this.eSub = this.recordService.delete(record.id).subscribe(
           () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
@@ -211,39 +239,28 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
   }
 
   /////////////////////////////////////////////////////////////////////////////
-  //                               Date Filter                              //
+  //                               Date Filter                               //
   /////////////////////////////////////////////////////////////////////////////
 
-  generateDateFromDays(days: number) {
-    let endDate = new Date();
-    let date = new Date();
-    let startDate = new Date(date.setDate(date.getDate() - days + 1));
-    this.dateRange = [startDate, endDate];
-    let startDate_str = this.convertDateToString(startDate);
-    let endDate_str = this.convertDateToString(endDate);
-    this.setDateForFilter([startDate_str, endDate_str]);
-  }
-
-  generateDateFromRange(dateRange: any[] | undefined) {
-    if (dateRange) {
-      this.dateRange = dateRange;
-      let startDate_str = this.convertDateToString(dateRange[0]);
-      let endDate_str = this.convertDateToString(dateRange[1]);
-      this.setDateForFilter([startDate_str, endDate_str]);
+  setDateForFilter(date: any) {
+    let dateRange_str = [];
+    if (typeof date == 'number') {
+      this.dateRange = this.convertDateService.convertDaysToRange(date);
+      dateRange_str = this.convertDateService.convertDaysToRange(date);
+    } else if (typeof date == 'object') {
+      this.dateRange = date;
+      dateRange_str = this.convertDateService.convertRangeToString(date);
+    } else {
+      return;
     }
-  }
-
-  setDateForFilter(dateRange: any[]) {
-    let startDate_str = dateRange[0] ?? null;
-    let endDate_str = dateRange[1] ?? null;
     if (this.filter) {
-      this.filter.startDate = startDate_str;
-      this.filter.endDate = endDate_str;
+      this.filter.startDate = dateRange_str[0] ?? null;
+      this.filter.endDate = dateRange_str[1] ?? null;
     } else {
       this.filter = {
         name: 'unknown',
-        startDate: startDate_str,
-        endDate: endDate_str
+        startDate: dateRange_str[0] ?? null,
+        endDate: dateRange_str[1] ?? null
       }
     }
     this.filterRecords(this.filter);
@@ -364,5 +381,4 @@ export class RecordsComponent implements OnInit, AfterContentChecked, OnDestroy 
       value.nativeElement.checked = checked;
     })
   }
-
 }

@@ -8,6 +8,6 @@ export interface Record {
   amount: number;
   comment?: string;
   account: Account;
-  category: Category;
+  category?: Category;
   userId?: number;
 }

@@ -143,7 +143,7 @@
                     </div>
                   </div>
                 </th>
-                <td class="budget text-center">{{currency.name !== 'USD' ? (currency.base ? 'USD-' + currency.name : currency.name + '-USD') : 'USD'}}</td>
+                <td class="budget text-center">{{currency.name !== 'USD' ? (currency.base ? currency.name + '/USD' : 'USD/' + currency.name) : 'USD'}}</td>
                 <td class="budget text-center">
                   {{currency | getRateForCurrency:rates}}
                 </td>
@@ -820,7 +820,7 @@
                 </div>
                 <select formControlName="filterRecordType" class="form-control">
                   <option value="null" disabled selected hidden>Select Record Type</option>
-                  <option *ngFor="let recordType of constants.RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
+                  <option *ngFor="let recordType of constants.RECORD_TYPES" [ngValue]="recordType.value">{{recordType.name}}</option>
                 </select>
               </div>
             </div>
@@ -913,7 +913,7 @@
                 </div>
                 <select formControlName="templateRecordType" class="form-control">
                   <option value="null" disabled selected hidden>Select Record Type</option>
-                  <option *ngFor="let recordType of constants.RECORD_TYPES" [ngValue]="recordType">{{recordType}}</option>
+                  <option *ngFor="let recordType of constants.RECORD_TYPES" [ngValue]="recordType.value">{{recordType.name}}</option>
                 </select>
               </div>
             </div>

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {User} from "../models/User";
 import {Observable, throwError} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, tap} from "rxjs/operators";
+import {catchError} from "rxjs/operators";
 
 const TOKEN_NAME = 'access_token';
 const USER_KEY = 'user_id';

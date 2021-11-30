@@ -21,6 +21,10 @@ import {RatesService} from "../../shared/services/rates.service";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import Swal from "sweetalert2";
 import { Constants } from "../../shared/global/constants";
+import {SharedService} from "../../shared/services/shared.service";
+import {EmitData} from "../../shared/models/EmitData";
+import {RecordService} from "../../shared/services/record.service";
+import {ConvertDateService} from "../../shared/services/convertDate.service";
 
 @Component({
   selector: 'app-settings',
@@ -35,6 +39,24 @@ export class SettingsComponent implements OnInit, OnDestroy {
   fSub!: Subscription;
   gSub?: Subscription;
   hSub?: Subscription;
+  iSub?: Subscription;
+  jSub?: Subscription;
+  kSub?: Subscription;
+  lSub?: Subscription;
+  mSub?: Subscription;
+  nSub?: Subscription;
+  oSub?: Subscription;
+  pSub?: Subscription;
+  qSub?: Subscription;
+  rSub?: Subscription;
+  sSub?: Subscription;
+  tSub?: Subscription;
+  uSub?: Subscription;
+  wSub?: Subscription;
+  xSub?: Subscription;
+  ySub?: Subscription;
+  zSub?: Subscription;
+  aSubPlus?: Subscription;
 
   accounts: Account[] = [];
   accountTypes: AccountType[] = [];
@@ -60,18 +82,31 @@ export class SettingsComponent implements OnInit, OnDestroy {
   updateObject!: any;
   closeResult!: string;
   constants = Constants;
+  emitSettings: EmitData = {source: 'settings', content: null};
 
   constructor(private accountService: AccountService,
               private accountTypeService: AccountTypeService,
               private currencyService: CurrencyService,
               private categoryService: CategoryService,
+              private recordService: RecordService,
               private filterService: FilterService,
               private templateService: TemplateService,
               private userService: UserService,
               private toast: ToastrService,
               private ratesService: RatesService,
-              private modalService: NgbModal
-  ) {}
+              private modalService: NgbModal,
+              private sharedService: SharedService,
+              private convertDateService: ConvertDateService
+  ) {
+    sharedService.changeEmitted$.subscribe(result => {
+      if (!result.source) {
+        return
+      }
+      if (result.content && result.content === 'onInit') {
+        this.ngOnInit();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.getAllAccounts();
@@ -82,6 +117,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.getAllTemplates();
     this.getUserInfo();
     this.uploadRates();
+    this.getRecordsAmount();
+    this.sharedService.emitChange(this.emitSettings);
   }
 
   ngOnDestroy(): void {
@@ -109,15 +146,65 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (this.hSub) {
       this.hSub.unsubscribe();
     }
+    if (this.iSub) {
+      this.iSub.unsubscribe();
+    }
+    if (this.jSub) {
+      this.jSub.unsubscribe();
+    }
+    if (this.kSub) {
+      this.kSub.unsubscribe();
+    }
+    if (this.lSub) {
+      this.lSub.unsubscribe();
+    }
+    if (this.mSub) {
+      this.mSub.unsubscribe();
+    }
+    if (this.nSub) {
+      this.nSub.unsubscribe();
+    }
+    if (this.oSub) {
+      this.oSub.unsubscribe();
+    }
+    if (this.pSub) {
+      this.pSub.unsubscribe();
+    }
+    if (this.qSub) {
+      this.qSub.unsubscribe();
+    }
+    if (this.rSub) {
+      this.rSub.unsubscribe();
+    }
+    if (this.sSub) {
+      this.sSub.unsubscribe();
+    }
+    if (this.tSub) {
+      this.tSub.unsubscribe();
+    }
+    if (this.uSub) {
+      this.uSub.unsubscribe();
+    }
+    if (this.wSub) {
+      this.wSub.unsubscribe();
+    }
+    if (this.xSub) {
+      this.xSub.unsubscribe();
+    }
+    if (this.ySub) {
+      this.ySub.unsubscribe();
+    }
+    if (this.zSub) {
+      this.zSub.unsubscribe();
+    }
+    if (this.aSubPlus) {
+      this.aSubPlus.unsubscribe();
+    }
+
   }
 
   compareById(v1: any, v2: any) {
     return v1?.id === v2?.id;
-  }
-
-  convertDateToString(date: Date): string {
-    date.setDate(date.getDate() + 1);
-    return date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
   }
 
   getUserInfo(): void {
@@ -192,6 +279,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
   }
 
+  emitChanges(name: string, body: any) {
+    this.emitSettings.content = {name, body};
+    this.sharedService.emitChange(this.emitSettings);
+  }
+
   /////////////////////////////////////////////////////////////////////////////
   //                         Account Type Operations                         //
   /////////////////////////////////////////////////////////////////////////////
@@ -200,6 +292,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.bSub = this.accountTypeService.getAll().subscribe(
       accountTypes => {
         this.accountTypes = accountTypes;
+        this.emitChanges('Account Types', accountTypes.length);
       },
       error => {
         this.toast.error(error.error.message ?? 'Account Types are not downloaded.');
@@ -228,7 +321,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       negative: this.formAccountType.get('accountTypeIsNegative')?.value
     };
     this.formAccountType.disable();
-    this.accountTypeService.add(accountType).subscribe(
+    this.iSub = this.accountTypeService.add(accountType).subscribe(
       () => {
         this.toast.success('New Account Type was created.');
         this.formAccountType.reset();
@@ -246,7 +339,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.name = this.formAccountType.get('accountTypeName')?.value;
     this.updateObject.negative = this.formAccountType.get('accountTypeIsNegative')?.value;
     this.formAccountType.disable();
-    this.accountTypeService.update(this.updateObject).subscribe(
+    this.jSub = this.accountTypeService.update(this.updateObject).subscribe(
       () => {
         this.toast.success('Account Type was updated.');
         this.formAccountType.reset();
@@ -281,7 +374,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value && accountType.id) {
-        this.accountTypeService.delete(accountType.id).subscribe(
+        this.kSub = this.accountTypeService.delete(accountType.id).subscribe(
           () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
@@ -310,6 +403,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.cSub = this.currencyService.getAll().subscribe(
       currencies => {
         this.currencies = currencies;
+        this.emitChanges('Currencies', currencies.length);
       },
       error => {
         this.toast.error(error.error.message ?? 'Currencies are not downloaded.');
@@ -341,7 +435,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       base: this.formCurrency.get('currencyBase')?.value
     };
     this.formCurrency.disable();
-    this.currencyService.add(currency).subscribe(
+    this.lSub = this.currencyService.add(currency).subscribe(
       () => {
         this.toast.success('New Currency was created.');
         this.formCurrency.reset();
@@ -360,7 +454,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.icon = this.formCurrency.get('currencyIcon')?.value;
     this.updateObject.base = this.formCurrency.get('currencyBase')?.value;
     this.formCurrency.disable();
-    this.currencyService.update(this.updateObject).subscribe(
+    this.mSub = this.currencyService.update(this.updateObject).subscribe(
       () => {
         this.toast.success('Currency was updated.');
         this.formCurrency.reset();
@@ -395,7 +489,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value && currency.id) {
-        this.currencyService.delete(currency.id).subscribe(
+        this.nSub = this.currencyService.delete(currency.id).subscribe(
           () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
@@ -424,6 +518,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.dSub = this.categoryService.getAll().subscribe(
       categories => {
         this.categories = categories;
+        this.emitChanges('Categories', categories.length);
         this.expenses = categories.filter((category: Category) => category.expense);
         this.incomes = categories.filter((category: Category) => !category.expense);
       },
@@ -457,7 +552,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       expense: this.formCategory.get('categoryExpense')?.value
     };
     this.formCategory.disable();
-    this.categoryService.add(category).subscribe(
+    this.oSub = this.categoryService.add(category).subscribe(
       () => {
         this.toast.success('New Category was created.');
         this.formCategory.reset();
@@ -476,7 +571,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.icon = this.formCategory.get('categoryIcon')?.value;
     this.updateObject.expense = this.formCategory.get('categoryExpense')?.value;
     this.formCategory.disable();
-    this.categoryService.update(this.updateObject).subscribe(
+    this.pSub = this.categoryService.update(this.updateObject).subscribe(
       () => {
         this.toast.success('Category was updated.');
         this.formCategory.reset();
@@ -511,7 +606,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value && category.id) {
-        this.categoryService.delete(category.id).subscribe(
+        this.qSub = this.categoryService.delete(category.id).subscribe(
           () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
@@ -540,6 +635,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.aSub = this.accountService.getAll().subscribe(
       accounts => {
         this.accounts = accounts;
+        this.emitChanges('Accounts', accounts.length);
       },
       error => {
         this.toast.error(error.error.message ?? 'Accounts are not downloaded.');
@@ -555,7 +651,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         accountName: new FormControl(account.name, [Validators.required]),
         accountIcon: new FormControl(account.icon, [Validators.required]),
         accountBalance: new FormControl(account.startBalance, [Validators.required]),
-        accountDate: new FormControl(account.startDate ? new Date(account.startDate) : null, [Validators.required]),
+        accountDate: new FormControl(account.startDate ? this.convertDateService.convertStringToDate(account.startDate) : null, [Validators.required]),
         accountColor: new FormControl(account.color, [Validators.required]),
         accountCurrency: new FormControl(account.currency, [Validators.required]),
         accountType: new FormControl(account.accountType, [Validators.required]),
@@ -580,15 +676,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
       name: this.formAccount.get('accountName')?.value,
       icon: this.formAccount.get('accountIcon')?.value,
       startBalance: this.formAccount.get('accountBalance')?.value,
-      startDate: this.formAccount.get('accountDate')?.value ? this.convertDateToString(this.formAccount.get('accountDate')?.value) :
-        this.convertDateToString(new Date()),
+      startDate: this.formAccount.get('accountDate')?.value ? this.convertDateService.convertDateToString(this.formAccount.get('accountDate')?.value) :
+        this.convertDateService.convertDateToString(new Date()),
       color: this.formAccount.get('accountColor')?.value,
       currency: this.formAccount.get('accountCurrency')?.value,
       accountType: this.formAccount.get('accountType')?.value,
       creditLimit: this.formAccount.get('accountLimit')?.value
     };
     this.formAccount.disable();
-    this.accountService.add(account).subscribe(
+    this.rSub = this.accountService.add(account).subscribe(
       () => {
         this.toast.success('New Account was created.');
         this.formAccount.reset();
@@ -606,14 +702,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.name = this.formAccount.get('accountName')?.value;
     this.updateObject.icon = this.formAccount.get('accountIcon')?.value;
     this.updateObject.startBalance = this.formAccount.get('accountBalance')?.value;
-    this.updateObject.startDate = this.formAccount.get('accountDate')?.value ? this.convertDateToString(this.formAccount.get('accountDate')?.value) :
-      this.convertDateToString(new Date());
+    this.updateObject.startDate = this.formAccount.get('accountDate')?.value ? this.convertDateService.convertDateToString(this.formAccount.get('accountDate')?.value) :
+      this.convertDateService.convertDateToString(new Date());
     this.updateObject.color = this.formAccount.get('accountColor')?.value;
     this.updateObject.currency = this.formAccount.get('accountCurrency')?.value;
     this.updateObject.accountType = this.formAccount.get('accountType')?.value;
     this.updateObject.creditLimit = this.formAccount.get('accountLimit')?.value;
     this.formAccount.disable();
-    this.accountService.update(this.updateObject).subscribe(
+    this.sSub = this.accountService.update(this.updateObject).subscribe(
       () => {
         this.toast.success('Account was updated.');
         this.formAccount.reset();
@@ -648,7 +744,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value && account.id) {
-        this.accountService.delete(account.id).subscribe(
+        this.tSub = this.accountService.delete(account.id).subscribe(
           () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
@@ -677,6 +773,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.gSub = this.filterService.getAll().subscribe(
       filters => {
         this.filters = filters;
+        this.emitChanges('Filters', filters.length);
       },
       error => {
         this.toast.error(error.error.message ?? 'Filters are not downloaded.');
@@ -689,8 +786,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.updateObject = filter;
       this.formFilter = new FormGroup({
         filterName: new FormControl(filter.name, [Validators.required]),
-        filterStartDate: new FormControl(filter.startDate ? new Date(filter.startDate) : null),
-        filterEndDate: new FormControl(filter.endDate ? new Date(filter.endDate) : null),
+        filterStartDate: new FormControl(filter.startDate ?this.convertDateService.convertStringToDate(filter.startDate) : null),
+        filterEndDate: new FormControl(filter.endDate ? this.convertDateService.convertStringToDate(filter.endDate) : null),
         filterRecordType: new FormControl(filter.recordType),
         filterCategories: new FormControl(filter.categories ?? []),
         filterAccounts: new FormControl(filter.accounts ?? [])
@@ -710,14 +807,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
   addFilter() {
     let filter: Filter = {
       name: this.formFilter.get('filterName')?.value,
-      startDate: this.formFilter.get('filterStartDate')?.value ? this.convertDateToString(this.formFilter.get('filterStartDate')?.value) : undefined,
-      endDate: this.formFilter.get('filterEndDate')?.value ? this.convertDateToString(this.formFilter.get('filterEndDate')?.value) : undefined,
+      startDate: this.formFilter.get('filterStartDate')?.value ? this.convertDateService.convertDateToString(this.formFilter.get('filterStartDate')?.value) : undefined,
+      endDate: this.formFilter.get('filterEndDate')?.value ? this.convertDateService.convertDateToString(this.formFilter.get('filterEndDate')?.value) : undefined,
       recordType: this.formFilter.get('filterRecordType')?.value,
       categories: this.formFilter.get('filterCategories')?.value,
       accounts: this.formFilter.get('filterAccounts')?.value
     };
     this.formFilter.disable();
-    this.filterService.add(filter).subscribe(
+    this.uSub = this.filterService.add(filter).subscribe(
       () => {
         this.toast.success('New Filter was created.');
         this.formFilter.reset();
@@ -733,13 +830,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   updateFilter() {
     this.updateObject.name = this.formFilter.get('filterName')?.value;
-    this.updateObject.startDate = this.formFilter.get('filterStartDate')?.value ? this.convertDateToString(this.formFilter.get('filterStartDate')?.value) : undefined;
-    this.updateObject.endDate = this.formFilter.get('filterEndDate')?.value ? this.convertDateToString(this.formFilter.get('filterEndDate')?.value) : undefined;
+    this.updateObject.startDate = this.formFilter.get('filterStartDate')?.value ? this.convertDateService.convertDateToString(this.formFilter.get('filterStartDate')?.value) : undefined;
+    this.updateObject.endDate = this.formFilter.get('filterEndDate')?.value ? this.convertDateService.convertDateToString(this.formFilter.get('filterEndDate')?.value) : undefined;
     this.updateObject.recordType = this.formFilter.get('filterRecordType')?.value;
     this.updateObject.categories = this.formFilter.get('filterCategories')?.value;
     this.updateObject.accounts = this.formFilter.get('filterAccounts')?.value;
     this.formFilter.disable();
-    this.filterService.update(this.updateObject).subscribe(
+    this.wSub = this.filterService.update(this.updateObject).subscribe(
       () => {
         this.toast.success('Filter was updated.');
         this.formFilter.reset();
@@ -774,7 +871,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value && filter.id) {
-        this.filterService.delete(filter.id).subscribe(
+        this.xSub = this.filterService.delete(filter.id).subscribe(
           () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
@@ -803,6 +900,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.hSub = this.templateService.getAll().subscribe(
       templates => {
         this.templates = templates;
+        this.emitChanges('Templates', templates.length);
       },
       error => {
         this.toast.error(error.error.message ?? 'Templates are not downloaded.');
@@ -840,7 +938,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       amount: this.formTemplate.get('templateAmount')?.value
     };
     this.formTemplate.disable();
-    this.templateService.add(template).subscribe(
+    this.ySub = this.templateService.add(template).subscribe(
       () => {
         this.toast.success('New Template was created.');
         this.formTemplate.reset();
@@ -861,7 +959,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateObject.recordType = this.formTemplate.get('templateRecordType')?.value;
     this.updateObject.amount = this.formTemplate.get('templateAmount')?.value;
     this.formTemplate.disable();
-    this.templateService.update(this.updateObject).subscribe(
+    this.zSub = this.templateService.update(this.updateObject).subscribe(
       () => {
         this.toast.success('Template was updated.');
         this.formTemplate.reset();
@@ -896,7 +994,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value && template.id) {
-        this.templateService.delete(template.id).subscribe(
+        this.aSubPlus = this.templateService.delete(template.id).subscribe(
           () => {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',
@@ -915,6 +1013,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
         );
       }
     })
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  //                             Records Operations                         //
+  /////////////////////////////////////////////////////////////////////////////
+
+  getRecordsAmount() {
+    this.recordService.getTotalNumber().subscribe(total => {
+      this.emitChanges('Records', total);
+    });
   }
 
 }

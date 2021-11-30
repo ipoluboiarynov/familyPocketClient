@@ -45,9 +45,10 @@ export class Constants {
   ];
 
   public static RECORD_TYPES = [
-    'INCOME',
-    'EXPENSE',
-    'TRANSFER'
+    {name: 'Income', value: 'INCOME'},
+    {name: 'Expense', value: 'EXPENSE'},
+    {name: 'Transfer IN', value: 'TR_IN'},
+    {name: 'Transfer OUT', value: 'TR_OUT'}
   ];
 
   public static CURRENCY_ICONS = [

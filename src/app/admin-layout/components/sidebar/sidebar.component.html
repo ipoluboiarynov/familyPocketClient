@@ -4,8 +4,8 @@
     <div class="scrollbar-inner">
       <div class="sidenav-header d-flex align-items-center">
         <!-- Logo -->
-        <a class="navbar-brand" [routerLink]="['/dashboards/dashboard']">
-          <img src="assets/img/brand/red.png" class="navbar-brand-img" alt="...">
+        <a class="navbar-brand pr-0 py-0" [routerLink]="['/dashboard']">
+          <img src="assets/img/brand/logo-long.png" class="navbar-brand-img" alt="logo">
         </a>
         <!-- Sidenav toggler -->
         <div class="ml-auto">
@@ -20,28 +20,227 @@
         </div>
       </div>
       <div class="navbar-inner">
-        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Dashboard  -->
+        <div class="collapse navbar-collapse" *ngIf="showDashboardSource">
+          <h6 class="navbar-heading p-0 text-muted">Account</h6>
+          <ul class="navbar-nav">
+            <li class="nav-item d-flex justify-content-between align-items-center pr-1" *ngFor="let account of accounts">
+              <div class="nav-link ml-1 p-2">
+
+                <div class="d-flex justify-content-center rounded-circle align-items-center p-2 ml-0 mr-2"
+                     [ngStyle]="{'background-color': account.color}">
+                  <i class="{{account.icon}}"></i>
+                </div>
+                <span class="nav-link-text" [hidden]="minimizedSidebar">{{account.name}}</span>
+              </div>
+              <div class="badge badge-pill badge-primary" [hidden]="minimizedSidebar">{{account.balance?.toLocaleString() +
+                ' ' + account.currency.name}}</div>
+            </li>
+            <hr class="m-0 p-0">
+            <li>
+              <div class="nav-link">
+                <h6 class="navbar-heading p-0 text-muted">Total Balance : {{(total_balance && total_balance > 0) ?
+                  '$' + total_balance.toLocaleString() :
+                  '-$' + (total_balance ? (+total_balance * -1).toLocaleString() : '')}}</h6>
+              </div>
+            </li>
+            <hr class="m-0 p-0" />
+          </ul>
+        </div>
+        <!-- Statistics Page  -->
+        <div class="collapse navbar-collapse" *ngIf="showStatisticsSource">
+          <h6 class="navbar-heading p-0 text-muted">Statistics for <span class="badge badge-pill badge-primary p-2 ml-2">{{statisticsLabel}}</span></h6>
           <!-- Incomes -->
           <h6 class="navbar-heading p-0 text-muted">Incomes</h6>
           <ul class="navbar-nav">
-            <li *ngFor="let category of categories | filterCategoriesByType:false" class="nav-item">
-              <a class="nav-link">
-                <i class="ni {{ category.icon }}"></i>
-                <span class="nav-link-text">{{ category.name }}</span>
-              </a>
+            <li *ngFor="let income of incomes" class="list-group-item d-flex justify-content-between align-items-center p-0">
+              <div class="nav-link pl-3">
+                <i class="{{income.icon}} ml-1"></i>
+                <span class="nav-link-text">{{income.category}}</span>
+              </div>
+              <div class="badge badge-pill badge-primary mr-2">${{income.amount.toLocaleString() ?? '0'}}</div>
             </li>
           </ul>
           <hr class="my-3" />
           <!-- Expenses -->
           <h6 class="navbar-heading p-0 text-muted">Expenses</h6>
           <ul class="navbar-nav">
-            <li *ngFor="let category of categories | filterCategoriesByType:true" class="nav-item">
-              <a class="nav-link">
-                <i class="ni {{ category.icon }}"></i>
-                <span class="nav-link-text">{{ category.name }}</span>
-              </a>
+            <li *ngFor="let expense of expenses" class="list-group-item d-flex justify-content-between align-items-center p-0">
+              <div class="nav-link pl-3">
+                <i class="{{expense.icon}} ml-1"></i>
+                <span class="nav-link-text">{{expense.category}}</span>
+              </div>
+              <div class="badge badge-pill badge-primary mr-2">${{expense.amount.toLocaleString() ?? '0'}}</div>
             </li>
           </ul>
+        </div>
+        <!-- Records Page -->
+        <div class="collapse navbar-collapse" id="sidenav-collapse-main" *ngIf="showRecordsSource">
+          <h6 class="navbar-heading p-0 text-muted">Filter</h6>
+          <form [formGroup]="formFilter" (ngSubmit)="sendFilter()">
+          <ul class="navbar-nav">
+            <!--      Filters      -->
+            <li class="nav-item d-flex flex-column justify-content-between" *ngIf="this.filters">
+              <div class="nav-link pl-3">
+                <div class="d-flex justify-content-center align-items-center p-2 mr-2">
+                  <i class="fas fa-sitemap"></i>
+                </div>
+                <div (click)="!sidebarFixed ? isCollapsedFilters = !isCollapsedFilters : null" class="border rounded p-1 pl-2 w-100"
+                     [ngClass]="{'filter-drop-active' : !isCollapsedFilters}"
+                     [hidden]="minimizedSidebar"
+                     [attr.aria-expanded]="!isCollapsedFilters" aria-controls="collapseFilters">
+                  Filters
+                </div>
+              </div>
+              <div id="collapseFilters" [collapse]="isCollapsedFilters" [isAnimated]="true">
+                <ul class="list-group m-0">
+                  <li class="list-group-item d-flex align-items-center p-1 pl-4" *ngFor="let filter of filters">
+                    <i class="fas fa-arrow-right mr-2 ml-2 fs-12"></i>
+                    <span class="fs-12 cursor" (click)="setFilter(filter)">{{filter.name}}</span>
+                    <i class="cursor fas fa-times fs-12 ml-auto mr-3 ml-auto pointer" (click)="deleteFilter(filter)"></i>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <!--      Name      -->
+            <li class="nav-item d-flex justify-content-between align-items-center">
+              <div class="nav-link">
+                <i class="fas fa-tag"></i>
+                <input formControlName="name" type="text" class="form-control form-control-sm"
+                       [hidden]="minimizedSidebar"
+                       [attr.disabled]="sidebarFixed ? true : null"
+                       placeholder="Filter Name">
+              </div>
+            </li>
+            <!--      Date Range      -->
+            <li class="nav-item d-flex justify-content-between align-items-center">
+              <div class="nav-link pl-3">
+                <div class="d-flex justify-content-center align-items-center p-2 mr-2"
+                     [ngClass]="{'filter-icon-active' : formFilter.value.range}"
+                (click)="resetDateRange()">
+                  <i class="far fa-calendar-alt"></i>
+                </div>
+                <input type="text" [hidden]="minimizedSidebar"
+                     id="date-range" formControlName="range"
+                     placeholder="00/00/0000 - 00/00/0000"
+                     class="form-control form-control-sm"
+                     bsDaterangepicker
+                       placement="right"
+                       [attr.disabled]="sidebarFixed ? true : null"
+                     [(bsValue)]="dateRange"
+                     [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
+              </div>
+            </li>
+            <!--      Record Type      -->
+            <li class="nav-item d-flex justify-content-between align-items-center">
+              <div class="nav-link w-100 pl-3">
+                <div class="d-flex justify-content-center align-items-center p-2 mr-2"
+                     [ngClass]="{'filter-icon-active' : formFilter.value.type && formFilter.value.type != 'null'}">
+                  <i class="fas fa-exchange-alt"></i>
+                </div>
+                  <select class="form-control form-control-sm" formControlName="type"
+                          [hidden]="minimizedSidebar"
+                          [attr.disabled]="sidebarFixed ? true : null">
+                    <option value="">All Types</option>
+                    <option *ngFor="let type of constants.RECORD_TYPES" [value]="type.value">{{type.name}}</option>
+                  </select>
+              </div>
+            </li>
+            <!--      Accounts      -->
+            <li class="nav-item d-flex  flex-column justify-content-center">
+              <div class="nav-link pl-3">
+                <div class="d-flex justify-content-center align-items-center p-2 mr-2"
+                     [ngClass]="{'filter-icon-active' : formFilter.get('accounts')?.value.length > 0}">
+                  <i class="fas fa-university"></i>
+                </div>
+                <div (click)="!sidebarFixed ? isCollapsedAccounts = !isCollapsedAccounts : null" class="border rounded p-1 pl-2 w-100"
+                     [ngClass]="{'filter-drop-active' : !isCollapsedAccounts}"
+                     [hidden]="minimizedSidebar" [attr.disabled]="sidebarFixed ? true : null"
+                     [attr.aria-expanded]="!isCollapsedAccounts" aria-controls="collapseAccounts">
+                  Accounts
+                </div>
+              </div>
+              <div id="collapseAccounts" [collapse]="isCollapsedAccounts" [isAnimated]="true">
+                <ul class="list-unstyled m-0">
+                  <li class="d-flex justify-content-around align-items-center">
+                    <button type="button" class="btn btn-sm btn-link" (click)="checkboxToggle(true, 'account')" id="accounts-check-side">check all</button>
+                    <button type="button" class="btn btn-sm btn-link" (click)="checkboxToggle(false, 'account')" id="accounts-uncheck-side">uncheck</button>
+                  </li>
+                  <li class="dropdown-item" *ngFor="let account of accounts">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" [id]="'check-account-side' + account.id"
+                             (change)="onCheckList($event)" [checked]="filter.accounts?.includes(account)">
+                      <label class="custom-control-label" [for]="'check-account-side' + account.id">{{account.name}}</label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <!--      Categories      -->
+            <li class="nav-item d-flex  flex-column justify-content-center">
+              <div class="nav-link pl-3">
+                <div class="d-flex justify-content-center align-items-center p-2 mr-2"
+                     [ngClass]="{'filter-icon-active' : formFilter.value.categories?.length > 0}">
+                  <i class="fas fa-sitemap"></i>
+                </div>
+                <div (click)="!sidebarFixed ? isCollapsedCategories = !isCollapsedCategories : null" class="border rounded p-1 pl-2 w-100"
+                     [ngClass]="{'filter-drop-active' : !isCollapsedCategories}"
+                     [hidden]="minimizedSidebar"
+                     [attr.aria-expanded]="!isCollapsedCategories" aria-controls="collapseCategories">
+                  Categories
+                </div>
+              </div>
+              <div id="collapseCategories" [collapse]="isCollapsedCategories" [isAnimated]="true">
+                <ul class="list-unstyled m-0">
+                  <li class="d-flex justify-content-around align-items-center">
+                    <button type="button" class="btn btn-sm btn-link" (click)="checkboxToggle(true, 'category')" id="categories-check-side">check all</button>
+                    <button type="button" class="btn btn-sm btn-link" (click)="checkboxToggle(false, 'category')" id="categories-uncheck-side">uncheck</button>
+                  </li>
+                  <li class="dropdown-item" *ngFor="let category of categories">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" [id]="'check-category-side' + category.id"
+                             (change)="onCheckList($event)" [checked]="filter.categories?.includes(category)">
+                      <label class="custom-control-label" [for]="'check-category-side' + category.id">{{category.name}}</label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <!--      Submit      -->
+            <li class="nav-item m-0 p-0 mt-3" [hidden]="minimizedSidebar">
+              <div class="nav-link m-0 p-0">
+                <div class="d-flex justify-content-around w-100">
+                  <button type="submit" class="btn btn-sm btn-dribbble btn-icon px-3"
+                          [disabled]="sidebarFixed ? true : null">
+                    <span class="btn-inner--icon"><i class="fas fa-filter"></i></span>
+                    <span class="btn-inner--text">Filter</span>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-slack btn-icon px-3"
+                          [disabled]="sidebarFixed ? true : null" (click)="saveFilter()">
+                    <span class="btn-inner--icon"><i class="fas fa-save"></i></span>
+                    <span class="btn-inner--text">{{filter.id ? 'Change' : 'Save'}}</span>
+                  </button>
+                </div>
+
+              </div>
+            </li>
+          </ul>
+          </form>
+
+        </div>
+        <!-- Settings Page -->
+        <div class="collapse navbar-collapse" *ngIf="showSettingsSource">
+          <h6 class="navbar-heading p-0 text-muted">Data for current User</h6>
+          <ul class="navbar-nav" >
+            <li class="nav-item d-flex justify-content-between align-items-center pr-1" *ngFor="let setting of settings">
+              <div class="nav-link">
+                <i class="{{setting.icon}}"></i>
+                <span class="nav-link-text">{{setting.name}}</span>
+              </div>
+              <div class="badge badge-pill badge-lg badge-primary">{{setting.count ?? '0'}}</div>
+            </li>
+          </ul>
+          <hr class="my-3" />
         </div>
       </div>
     </div>

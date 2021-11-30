@@ -29,6 +29,9 @@ import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
 import {AuthInterceptor} from "./shared/interceptors/auth.interceptor";
 import {DatePipe} from "@angular/common";
 import {ButtonsModule} from "ngx-bootstrap/buttons";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import { GetRateFromCurrenciesPipe } from './shared/pipes/get-rate-from-currencies.pipe';
+import { GetAccountByIdPipe } from './shared/pipes/get-account-by-id.pipe';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -48,7 +51,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NavbarComponent,
     SidebarComponent,
     FilterCategoriesByTypePipe,
-    GetRateForCurrencyPipe
+    GetRateForCurrencyPipe,
+    GetRateFromCurrenciesPipe,
+    GetAccountByIdPipe
   ],
     imports: [
         BrowserModule,
@@ -65,7 +70,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         FormsModule,
         NgbModule,
         BsDatepickerModule.forRoot(),
-        ButtonsModule
+        ButtonsModule,
+        AccordionModule
     ],
   providers: [
     {

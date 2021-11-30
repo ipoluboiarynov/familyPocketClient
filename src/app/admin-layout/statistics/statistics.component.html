@@ -29,7 +29,7 @@
       <div class=" card">
         <div class=" card-header">
           <h6 class=" surtitle">Expenses</h6>
-          <h5 class=" h3 mb-0">Total expenses: ${{total_expenses.toLocaleString('en-US')}}</h5>
+          <h5 class=" h3 mb-0">Total expenses: ${{total_expenses.toLocaleString()}}</h5>
         </div>
         <div class=" card-body">
           <div class=" chart" id="parent-expenses">
@@ -42,7 +42,7 @@
               <div class="progress-info">
                 <div class="progress-label">
                   <span>{{expense.category}}</span>
-                  <span class="bg-danger text-white">{{'$' + expense.amount.toLocaleString('en-US')}}</span>
+                  <span class="bg-danger text-white">{{'$' + expense.amount.toLocaleString()}}</span>
                 </div>
                 <div class="progress-percentage">
                   <span>{{expense.percent}}%</span>
@@ -62,7 +62,7 @@
       <div class=" card">
         <div class=" card-header">
           <h6 class=" surtitle">Incomes</h6>
-          <h5 class=" h3 mb-0">Total incomes: ${{total_incomes.toLocaleString('en-US')}}</h5>
+          <h5 class=" h3 mb-0">Total incomes: ${{total_incomes.toLocaleString()}}</h5>
         </div>
         <div class=" card-body">
           <div class=" chart" id="parent-incomes">
@@ -75,7 +75,7 @@
               <div class="progress-info">
                 <div class="progress-label">
                   <span>{{income.category}}</span>
-                  <span class="bg-success text-white">{{'$' + income.amount.toLocaleString('en-US')}}</span>
+                  <span class="bg-success text-white">{{'$' + income.amount.toLocaleString()}}</span>
                 </div>
                 <div class="progress-percentage">
                   <span>{{income.percent}}%</span>

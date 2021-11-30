@@ -34,4 +34,20 @@ export class CurrencyService {
   update(currency: Currency) {
     return this.http.patch<any>('/api/currency/update', currency);
   }
+
+  getRateByName(name: string, base: boolean) {
+    let result = 1;
+    let rates = window.localStorage.getItem('rates');
+    if (rates) {
+      let rates_obj = JSON.parse(rates);
+      if (rates_obj.rates) {
+        if (base) {
+          result = Math.round((1 /rates_obj.rates[name]) * 100)/ 100;
+        } else {
+          result = Math.round((rates_obj.rates[name] * 100)) / 100;
+        }
+      }
+    }
+    return result;
+  }
 }

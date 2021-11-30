@@ -41,8 +41,12 @@
           </button>
         </li>
       </ul>
+      <!--  Transfer money  -->
+      <button class="btn btn-icon btn-3 btn-info ml-auto px-3" type="button" (click)="open(transferModal, 'transfer')">
+        <span class="btn-inner--icon"><i class="fas fa-exchange-alt"></i></span>
+      </button>
       <!--  Add Record  -->
-      <button class="btn btn-icon btn-3 btn-success ml-auto px-3" type="button" (click)="open(recordModal)">
+      <button class="btn btn-icon btn-3 btn-success ml-auto px-3" type="button" (click)="open(recordModalAdd, 'record')">
         <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
       </button>
       <!--  Logout  -->
@@ -56,16 +60,35 @@
 <div *ngIf="sidenavOpen === true" class="backdrop d-xl-none" (click)="toggleSidenav()"></div>
 
 <!--      Modal Record    -->
-<ng-template #recordModal let-c="close" let-d="dismiss">
+<ng-template #recordModalAdd let-c="close" let-d="dismiss">
   <div class="modal-content">
     <div class="modal-body p-0">
       <div class="card bg-secondary shadow border-0 mb-0">
         <div class="card-header bg-white pb-0">
           <div class="text-muted text-center mb-3">
-            <h3>Add Account</h3>
+            <h3>Add Record</h3>
           </div>
         </div>
         <div class="card-body px-lg-5 py-lg-2">
+
+          <div (click)="isCollapsedTemplates = !isCollapsedTemplates"
+               [ngClass]="{'filter-drop-active' : !isCollapsedTemplates}"
+               [attr.aria-expanded]="!isCollapsedTemplates" aria-controls="collapseFilters"
+               class="border rounded d-flex align-items-center p-2 w-100 mb-3 cursor">
+            <i class="fas fa-file-alt"></i>
+            <h4 class="mb-0 ml-2">Templates</h4>
+          </div>
+
+          <div id="collapseFilters" class="mb-3" [collapse]="isCollapsedTemplates" [isAnimated]="true">
+            <ul class="list-group m-0">
+              <li class="list-group-item d-flex align-items-center p-1 pl-4" *ngFor="let template of templates">
+                <i class="fas fa-arrow-right mr-2 ml-2 fs-12"></i>
+                <span class="fs-12 cursor" (click)="setTemplate(template)">{{template.name}}</span>
+                <i class="cursor fas fa-times fs-12 ml-auto mr-3 ml-auto pointer" (click)="deleteTemplate(template)"></i>
+              </li>
+            </ul>
+          </div>
+
           <form [formGroup]="formRecord" (ngSubmit)="addRecord()">
             <!--  Record Type  -->
             <div class="form-group mb-3">
@@ -159,4 +182,126 @@
     </div>
   </div>
 
+</ng-template>
+
+<!--      Modal Transfer    -->
+<ng-template #transferModal let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="card bg-secondary shadow border-0 mb-0">
+        <div class="card-header bg-white pb-0">
+          <div class="text-muted text-center mb-3">
+            <h4 class="mb-0 ml-2">Transfer Money</h4>
+          </div>
+          <form [formGroup]="formTransfer" (change)="onFormChange($event)" (ngSubmit)="makeTransfer()">
+            <!--     Date       -->
+            <div class="form-group mb-2">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                </div>
+                <input type="text"
+                       placeholder="Set Date"
+                       class="form-control"
+                       bsDatepicker
+                       formControlName="transferDate"
+                       [bsConfig]="{ isAnimated: true, containerClass: 'theme-green'}">
+              </div>
+            </div>
+            <!--     From       -->
+            <hr class="m-2">
+            From:
+            <hr class="m-2">
+            <!--    From Account        -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-university"></i></span>
+                </div>
+                <select formControlName="transferFromAccount" class="form-control" [compareWith]="compareById">
+                  <option value="null" disabled selected hidden>From Account</option>
+                  <option *ngFor="let account of accounts" [ngValue]="account">{{account.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--    From Amount        -->
+            <div class="row">
+              <div class="col-7">
+                <div class="form-group mb-2">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text fs-12"><i class="fas fa-calculator"></i></span>
+                    </div>
+                    <input formControlName="transferFromAmount" class="form-control" placeholder="0.00" type="number"
+                           min="0.00" step="0.01">
+                  </div>
+                </div>
+              </div>
+              <div class="col-5 d-flex align-items-center">
+                <span class="fs-12 mx-auto">{{formTransfer.get('transferFromAccount') ?
+                  formTransfer.get('transferFromAccount')?.value?.currency.name : ''}}</span>
+              </div>
+            </div>
+            <!--     To     -->
+            <hr class="m-2">
+            To:
+            <hr class="m-2">
+            <!--    To Account        -->
+            <div class="form-group">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-university"></i></span>
+                </div>
+                <select formControlName="transferToAccount" class="form-control" [compareWith]="compareById">
+                  <option value="null" disabled selected hidden>To Account</option>
+                  <option *ngFor="let account of accounts" [ngValue]="account">{{account.name}}</option>
+                </select>
+              </div>
+            </div>
+            <!--    To Amount      -->
+            <div class="row">
+              <div class="col-7">
+                <div class="form-group mb-2">
+                  <div class="input-group input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text fs-12"><i class="fas fa-calculator"></i></span>
+                    </div>
+                    <input formControlName="transferToAmount" class="form-control" placeholder="0.00" type="number"
+                           min="0.00" step="0.01" id="amountToAccount">
+                  </div>
+                </div>
+              </div>
+              <div class="col-5 d-flex align-items-center">
+                <span class="fs-12 mx-auto">{{formTransfer.get('transferToAccount') ?
+                  formTransfer.get('transferToAccount')?.value?.currency.name : ''}}</span>
+              </div>
+            </div>
+            <!--      Rate      -->
+            <div class="d-flex justify-content-around my-3">
+              <span class="text-muted fs-12">
+                Current Rate: {{
+                (formTransfer.get('transferFromAccount')?.value &&
+                  formTransfer.get('transferToAccount')?.value) ?
+                ([formTransfer.get('transferFromAccount')?.value.currency, formTransfer.get('transferToAccount')?.value.currency]
+                  | getRateFromCurrencies:rates) : 0}}</span>
+
+              <span class="text-muted fs-12">Your Rate: {{(formTransfer.get('transferToAmount')?.value &&
+                formTransfer.get('transferFromAmount')?.value &&
+                formTransfer.get('transferFromAmount')?.value > 0) ?
+                (formTransfer.get('transferToAmount')?.value / formTransfer.get('transferFromAmount')?.value).toFixed(2) : 0}}</span>
+            </div>
+            <!--  Buttons  -->
+            <div class="d-flex justify-content-between my-4">
+              <button type="submit" class="btn btn-success" [disabled]="formTransfer.invalid || formTransfer.disabled">
+                Add
+              </button>
+              <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal" (click)="c('Close click')">
+                Dismiss
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
