@@ -1,11 +1,21 @@
-import { Component } from '@angular/core';
+import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {SpinnerService} from "./shared/services/spinner.service";
 
 @Component({
   selector: 'app-root',
-  template: '<p *ngIf="!cookieEnabled" class="top-message">Cookies disabled! Enable cookies in browser settings!</p>' +
-    '<router-outlet></router-outlet>'
+  templateUrl: 'app.component.html'
 })
-export class AppComponent {
+export class AppComponent implements AfterViewChecked {
   title = 'familyPocketClient';
   cookieEnabled: boolean = navigator.cookieEnabled;
+  spinner!: SpinnerService;
+
+  constructor(private spinnerService: SpinnerService,
+              private cdr: ChangeDetectorRef) {}
+
+  ngAfterViewChecked(): void {
+    this.spinner = this.spinnerService;
+    this.cdr.detectChanges();
+  }
+
 }

@@ -76,8 +76,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "ssl": true,
-            "sslKey": "src/assets/ssl/ivan4usa_2021_key.key",
-            "sslCert": "src/assets/ssl/ivan4usa_2021_key.cer"
+            "sslKey": "src/assets/ssl/ivan4usa_ssl.key",
+            "sslCert": "src/assets/ssl/ivan4usa_ssl.cer"
           },
           "configurations": {
             "production": {

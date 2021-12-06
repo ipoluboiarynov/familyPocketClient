@@ -559,6 +559,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formCategory.enable();
         this.modalService.dismissAll();
         this.getAllCategories();
+        this.sharedService.emitChange({source: 'settings', content: 'onInit'});
       },
       error => {
         this.formCategory.enable();
@@ -578,6 +579,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formCategory.enable();
         this.modalService.dismissAll();
         this.getAllCategories();
+        this.sharedService.emitChange({source: 'settings', content: 'onInit'});
         this.updateObject = null;
       },
       error => {
@@ -614,6 +616,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
               icon: 'success'
             }).then();
             this.getAllCategories();
+            this.sharedService.emitChange({source: 'settings', content: 'onInit'});
           },
           error => {
             swalWithBootstrapButtons.fire({
@@ -691,6 +694,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formAccount.enable();
         this.modalService.dismissAll();
         this.getAllAccounts();
+        this.sharedService.emitChange({source: 'settings', content: 'onInit'});
       },
       error => {
         this.formAccount.enable();
@@ -716,6 +720,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formAccount.enable();
         this.modalService.dismissAll();
         this.getAllAccounts();
+        this.sharedService.emitChange({source: 'settings', content: 'onInit'});
         this.updateObject = null;
       },
       error => {
@@ -752,6 +757,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
               icon: 'success'
             }).then();
             this.getAllAccounts();
+            this.sharedService.emitChange({source: 'settings', content: 'onInit'});
           },
           error => {
             swalWithBootstrapButtons.fire({
@@ -945,6 +951,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formTemplate.enable();
         this.modalService.dismissAll();
         this.getAllTemplates();
+        this.sharedService.emitChange({source: 'settings', content: 'onInit'});
       },
       error => {
         this.formTemplate.enable();
@@ -966,6 +973,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formTemplate.enable();
         this.modalService.dismissAll();
         this.getAllTemplates();
+        this.sharedService.emitChange({source: 'settings', content: 'onInit'});
         this.updateObject = null;
       },
       error => {
@@ -1002,6 +1010,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
               icon: 'success'
             }).then();
             this.getAllTemplates();
+            this.sharedService.emitChange({source: 'settings', content: 'onInit'});
           },
           error => {
             swalWithBootstrapButtons.fire({
@@ -1024,5 +1033,4 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.emitChanges('Records', total);
     });
   }
-
 }

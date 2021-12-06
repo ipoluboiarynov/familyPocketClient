@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Account} from "../models/Account";
 import {AuthService} from "./auth.service";
+import {ConvertDateService} from "./convertDate.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class AccountService {
   userId: number = 0;
 
   constructor(private http: HttpClient,
-              private auth: AuthService) {
+              private auth: AuthService,
+              private convertDateService: ConvertDateService) {
     let getUserId = this.auth.getUserId();
     if (getUserId) {
       this.userId = +getUserId;
@@ -21,7 +23,7 @@ export class AccountService {
   getAll(date?: string): Observable<any> {
     if (!date) {
       let today = new Date();
-      date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + ("0" + today.getDate()).slice(-2);
+      date = this.convertDateService.convertDateToString(today);
     }
     return this.http.post<any>('/api/account/all', {id: this.userId, date: date});
   }

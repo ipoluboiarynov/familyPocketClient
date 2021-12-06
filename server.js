@@ -37,8 +37,8 @@ app.get('/*', function (req, res) {
 // for local run ---------------------------------------------
 
 // const options = {
-//   key: fs.readFileSync(rootPath + '/dist/' + appName + '/assets/ssl/ivan4usa_2021_key.key'),
-//   cert: fs.readFileSync(rootPath + '/dist/' + appName + '/assets/ssl/ivan4usa_2021_key.cer')
+//   key: fs.readFileSync(rootPath + '/dist/' + appName + '/assets/ssl/ivan4usa_ssl.key'),
+//   cert: fs.readFileSync(rootPath + '/dist/' + appName + '/assets/ssl/ivan4usa_ssl.cer')
 // };
 // const appServer = https.createServer(options, app);
 //

@@ -32,6 +32,7 @@ import {ButtonsModule} from "ngx-bootstrap/buttons";
 import {AccordionModule} from "ngx-bootstrap/accordion";
 import { GetRateFromCurrenciesPipe } from './shared/pipes/get-rate-from-currencies.pipe';
 import { GetAccountByIdPipe } from './shared/pipes/get-account-by-id.pipe';
+import {SpinnerInterceptor} from "./shared/interceptors/spinner.interceptor";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -81,6 +82,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptor,
       multi: true
     },
     DatePipe

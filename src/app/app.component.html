@@ -1,0 +1,5 @@
+<div *ngIf="spinner && spinner.visibility | async" class="loader-wrapper">
+  <div class="loader">Loading...</div>
+</div>
+<p *ngIf="!cookieEnabled" class="top-message">Cookies disabled! Enable cookies in browser settings!</p>
+<router-outlet></router-outlet>

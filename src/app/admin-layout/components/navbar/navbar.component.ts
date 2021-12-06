@@ -53,6 +53,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private ratesService: RatesService,
     private sharedService: SharedService
   ) {
+    this.sharedService.changeEmitted$.subscribe(result => {
+      if (!result.source) {
+        return
+      }
+      if (result.content && result.content === 'onInit') {
+        this.ngOnInit();
+      }
+    });
+
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         // Show loading indicator
@@ -213,10 +222,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   setTemplate(template: Template) {
+    template.recordType ? this.formRecord.get('recordType')?.setValue(template.recordType) : '';
+    template.category ? this.formRecord.get('recordCategory')?.setValue(template.category) : '';
+    template.account ? this.formRecord.get('recordAccount')?.setValue(template.account) : '';
     template.amount ? this.formRecord.get('recordAmount')?.setValue(template.amount) : '';
-    template.amount ? this.formRecord.get('recordType')?.setValue(template.recordType) : '';
-    template.amount ? this.formRecord.get('recordCategory')?.setValue(template.category) : '';
-    template.amount ? this.formRecord.get('recordAccount')?.setValue(template.account) : '';
+    template.name ? this.formRecord.get('recordComment')?.setValue(template.name) : '';
     this.isCollapsedTemplates = true;
   }
 
