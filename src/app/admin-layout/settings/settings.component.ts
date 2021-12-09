@@ -59,6 +59,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   zSub?: Subscription;
   aSubPlus?: Subscription;
   bSubPlus?: Subscription;
+  cSubPlus?: Subscription;
 
   accounts: Account[] = [];
   accountTypes: AccountType[] = [];
@@ -208,6 +209,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (this.bSubPlus) {
       this.bSubPlus.unsubscribe();
     }
+    if (this.cSubPlus) {
+      this.cSubPlus.unsubscribe();
+    }
 
   }
 
@@ -289,7 +293,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public isItSpace(control: String) {
+  isItSpace(control: String) {
     return control.indexOf(' ') >= 0;
   }
 
@@ -1085,7 +1089,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   /////////////////////////////////////////////////////////////////////////////
 
   getRecordsAmount() {
-    this.recordService.getTotalNumber().subscribe(total => {
+    this.cSubPlus = this.recordService.getTotalNumber().subscribe(total => {
       this.emitChanges('Records', total);
     });
   }
