@@ -1,9 +1,9 @@
 <div class="container-fluid mt-3">
   <!--  Profile / Currencies -->
-  <div class="row">
+  <div class="row" *ngIf="user">
     <!--   Profile   -->
     <div class="col-12 col-sm-6 pr-0 pl-0 pr-sm-2">
-      <div class="card card-frame" *ngIf="user">
+      <div class="card card-frame">
         <div class="card-body">
           <h4 class="card-title text-uppercase text-center mb-3">Profile</h4>
           <form [formGroup]="userForm" (ngSubmit)="changeProfile()">
@@ -12,14 +12,12 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">@</span>
                 </div>
-                <input type="text" class="form-control" formControlName="name" aria-label="Name" aria-describedby="Name"
-                [value]="'value'">
+                <input type="text" class="form-control" formControlName="name" aria-label="Name" aria-describedby="Name">
                 <div class="input-group-append">
                   <button class="btn btn-outline-light" type="submit" id="edit-name">Change</button>
                 </div>
               </div>
             </div>
-
             <div class="form-group">
               <div class="input-group input-group-merge">
                 <div class="input-group-prepend">
@@ -32,14 +30,46 @@
               </div>
             </div>
           </form>
-
-
-
         </div>
       </div>
     </div>
-    <!--   Empty   -->
+    <!--   Change Password   -->
     <div class="col-12 col-sm-6 pr-0 pl-0 pl-sm-2">
+      <div class="card card-frame">
+        <div class="card-body">
+          <h4 class="card-title text-uppercase text-center mb-3">Change Password</h4>
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+            <div class="row">
+              <div class="col-9">
+                <div class="form-group">
+                  <div class="input-group input-group-merge">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    </div>
+                    <input type="password" class="form-control" formControlName="newPassword" aria-label="Password"
+                           aria-describedby="Password">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group input-group-merge">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fas fa-redo"></i></span>
+                    </div>
+                    <input type="password" class="form-control" formControlName="newPasswordRepeat" aria-label="Repeat Password"
+                           aria-describedby="Repeat Password">
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="input-group-append">
+                  <button class="btn btn-success" [disabled]="passwordForm.disabled || passwordForm.invalid"
+                          type="submit">Change</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
   <!--  Account Types / Currencies   -->

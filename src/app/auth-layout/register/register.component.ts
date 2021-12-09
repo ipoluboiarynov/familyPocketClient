@@ -49,7 +49,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
           }).then();
         },
         error => {
-          this.toast.error(error.error.exception);
+          console.log(error);
+          this.toast.error(error ?? 'Error');
           this.form.enable();
         });
     } else {
