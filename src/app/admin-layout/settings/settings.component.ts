@@ -25,6 +25,7 @@ import {SharedService} from "../../shared/services/shared.service";
 import {EmitData} from "../../shared/models/EmitData";
 import {RecordService} from "../../shared/services/record.service";
 import {ConvertDateService} from "../../shared/services/convertDate.service";
+import {AuthService} from "../../shared/services/auth.service";
 
 @Component({
   selector: 'app-settings',
@@ -57,6 +58,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ySub?: Subscription;
   zSub?: Subscription;
   aSubPlus?: Subscription;
+  bSubPlus?: Subscription;
 
   accounts: Account[] = [];
   accountTypes: AccountType[] = [];
@@ -71,6 +73,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   user: User | null = null;
 
   userForm!: FormGroup;
+  passwordForm!: FormGroup;
   formAccountType!: FormGroup;
   formCurrency!: FormGroup;
   formCategory!: FormGroup;
@@ -84,7 +87,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constants = Constants;
   emitSettings: EmitData = {source: 'settings', content: null};
 
-  constructor(private accountService: AccountService,
+  constructor(private auth: AuthService,
+              private accountService: AccountService,
               private accountTypeService: AccountTypeService,
               private currencyService: CurrencyService,
               private categoryService: CategoryService,
@@ -109,6 +113,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.initPasswordForm();
     this.getAllAccounts();
     this.getAllAccountTypes();
     this.getAllCurrencies();
@@ -200,7 +205,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (this.aSubPlus) {
       this.aSubPlus.unsubscribe();
     }
+    if (this.bSubPlus) {
+      this.bSubPlus.unsubscribe();
+    }
 
+  }
+
+  initPasswordForm() {
+    this.passwordForm = new FormGroup({
+      newPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      newPasswordRepeat: new FormControl('', [Validators.required, Validators.minLength(6)])
+    });
   }
 
   compareById(v1: any, v2: any) {
@@ -223,18 +238,59 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   changeProfile() {
+    if (this.isItSpace(this.userForm.get("name")?.value)) {
+      this.toast.error("The name should not have spaces!");
+      return;
+    }
     if (this.user && this.userForm.valid && this.userForm.touched) {
       this.user.email = this.userForm.get('email')?.value;
-      this.user.name = this.userForm.get('name')?.value;
+      if (this.userForm.get('name')?.value.trim().length > 0) {
+        this.user.name = this.userForm.get('name')?.value;
+      } else {
+        this.user.name = null;
+      }
       this.fSub = this.userService.updateUser(this.user).subscribe(
-        newUser => {
-          this.toast.success('User was successfully updated!')
-          this.user = newUser;
+        (result) => {
+          if (result.success) {
+            this.auth.saveToken(result.token);
+          }
+          this.getUserInfo();
+          this.toast.success('User was successfully updated!');
         },
         error => {
           this.toast.error(error.error.message ?? 'User was not updated!');
         });
     }
+  }
+
+  changePassword() {
+    if (this.passwordForm.get('newPassword') && this.passwordForm.get('newPasswordRepeat')) {
+      let newPassword = this.passwordForm.get('newPassword')?.value;
+      let newPasswordRepeat = this.passwordForm.get('newPasswordRepeat')?.value;
+      if (newPassword.trim().length > 0 && newPasswordRepeat.trim().length > 0) {
+        if (newPassword === newPasswordRepeat) {
+          this.passwordForm.disable();
+          this.bSubPlus = this.userService.updatePassword(newPassword).subscribe(
+            result => {
+              this.passwordForm.reset();
+              this.passwordForm.enable();
+              this.toast.success("Password has been successfully changed.");
+            },
+            error => {
+              this.passwordForm.enable();
+              this.toast.error(error.error ?? "Password did not change!");
+          });
+        } else {
+          this.toast.error("Repeated Password not match");
+        }
+      } else {
+        this.toast.error("Password field should not to be empty");
+      }
+    }
+  }
+
+  public isItSpace(control: String) {
+    return control.indexOf(' ') >= 0;
   }
 
   uploadRates() {

@@ -19,10 +19,14 @@ export class UserService {
   }
 
   getUser(): Observable<any> {
-    return this.http.post<any>('/api/user/id', this.userId);
+    return this.http.post<any>('/api/auth/user-info', this.userId);
   }
 
   updateUser(newUser: User): Observable<any> {
-    return this.http.post<any>('/api/user/update', newUser);
+    return this.http.patch<any>('/api/auth/update-user', newUser);
+  }
+
+  updatePassword(password: string): Observable<any> {
+    return this.http.patch<any>('/api/auth/update-password', password);
   }
 }
