@@ -20,9 +20,9 @@
           </div>
           <div class="col-12 col-md-6 d-flex align-items-center p-0">
             <ul class="d-flex list-unstyled align-items-center mb-0 ml-2">
-              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="setDateForFilter(1)">Today</button></li>
-              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="setDateForFilter(7)">7 days</button></li>
-              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="setDateForFilter(30)">30 days</button></li>
+              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="setDateFromDays(1)">Today</button></li>
+              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="setDateFromDays(7)">7 days</button></li>
+              <li><button class="btn btn-sm rounded-pill btn-outline-secondary text-nowrap ml-1" type="button" (click)="setDateFromDays(30)">30 days</button></li>
               <i *ngIf="dateRange" class="fas fa-times-circle d-inline text-danger ml-2 pointer" (click)="resetDateRange()"></i>
             </ul>
           </div>

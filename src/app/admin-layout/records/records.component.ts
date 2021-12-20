@@ -242,12 +242,13 @@ export class RecordsComponent implements OnInit, OnDestroy {
   //                               Date Filter                               //
   /////////////////////////////////////////////////////////////////////////////
 
+  setDateFromDays(days: number) {
+    this.dateRange = this.convertDateService.convertDaysToRange(days);
+  }
+
   setDateForFilter(date: any) {
     let dateRange_str = [];
-    if (typeof date == 'number') {
-      this.dateRange = this.convertDateService.convertDaysToRange(date);
-      dateRange_str = this.convertDateService.convertDaysToRange(date);
-    } else if (typeof date == 'object') {
+    if (typeof date == 'object') {
       this.dateRange = date;
       dateRange_str = this.convertDateService.convertRangeToString(date);
     } else {

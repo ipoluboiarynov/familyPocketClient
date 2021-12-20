@@ -237,3 +237,8 @@ $text_light: #8F96A9;
   }
 }
 
+bs-daterangepicker-container {
+  position: fixed !important;
+  transform: translate3d(0,120px,0)!important;
+}
+
