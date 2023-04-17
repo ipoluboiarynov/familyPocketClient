@@ -3,12 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config src/proxy.conf.json",
-    "start:prod": "node server.js",
-    "build": "webpack",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "heroku-postbuild": "ng build --aot --prod"
+    "start": "ng serve --proxy-config src/proxy-dev.conf.json",
+    "build": "ng build"
   },
   "type": "module",
   "private": true,

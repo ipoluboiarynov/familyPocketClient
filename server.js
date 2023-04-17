@@ -5,25 +5,22 @@ import path from 'path';
 import fs from 'fs';
 
 const app = express();
-const herokuBackendUrl = 'https://family-pocket--backend.herokuapp.com';
+const backendUrl = 'https://fp-server.webitwell.cloud';
 const rootPath = path.resolve();
 const appName = 'familyPocketClient';
 
 app.use('/api', proxy.createProxyMiddleware({
-  target: herokuBackendUrl,
+  target: backendUrl,
   changeOrigin: true,
   secure: true,
-  withCredentials: true,
-  // pathRewrite: {
-  //   "^/api/": ""
-  // }
+  withCredentials: true
 }));
 
 app.use(express.static(rootPath + '/dist/' + appName));
 
 app.get('*', function (req, res, next) {
   if (req.headers['x-forwarded-proto'] !== 'https')
-    res.redirect(herokuBackendUrl + req.url)
+    res.redirect(backendUrl + req.url)
   else
     next()
 })
