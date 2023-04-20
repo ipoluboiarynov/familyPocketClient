@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config src/proxy-dev.conf.json",
+    "start": "ng serve --proxy-config src/proxy-dev.conf.json --ssl --ssl-key src/assets/ssl/ivan4usa_ssl.key --ssl-cert src/assets/ssl/ivan4usa_ssl.cer",
+    "start-prod":"ng serve --host 0.0.0.0 --proxy-config src/proxy-prod.conf.json",
     "build": "ng build"
   },
   "type": "module",

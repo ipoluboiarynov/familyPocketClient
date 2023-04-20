@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 
 const app = express();
-const backendUrl = 'https://fp-server.webitwell.cloud';
+const backendUrl = 'http://api:8080'; //'https://fp-server.webitwell.cloud';
 const rootPath = path.resolve();
 const appName = 'familyPocketClient';
 
@@ -18,12 +18,12 @@ app.use('/api', proxy.createProxyMiddleware({
 
 app.use(express.static(rootPath + '/dist/' + appName));
 
-app.get('*', function (req, res, next) {
-  if (req.headers['x-forwarded-proto'] !== 'https')
-    res.redirect(backendUrl + req.url)
-  else
-    next()
-})
+// app.get('*', function (req, res, next) {
+//   if (req.headers['x-forwarded-proto'] !== 'https')
+//     res.redirect(backendUrl + req.url)
+//   else
+//     next()
+// })
 
 app.get('/*', function (req, res) {
   const fullPath = path.join(rootPath + '/dist/' + appName + '/index.html');
